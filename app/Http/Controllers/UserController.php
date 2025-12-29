@@ -34,7 +34,7 @@ class UserController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role'     => 'required|in:super_admin,admin',
+            'role'     => 'required|in:owner,admin,kasir',
         ]);
 
         User::create([
@@ -66,7 +66,7 @@ class UserController extends Controller
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email,' . $user->id,
-            'role'     => 'required|in:super_admin,admin',
+            'role'     => 'required|in:owner,admin,kasir',
             'password' => 'nullable|min:6',
         ]);
 
