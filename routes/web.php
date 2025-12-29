@@ -13,7 +13,7 @@ use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\GajiController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
