@@ -29,45 +29,45 @@
     @endif
 
     <!-- TRANSAKSI -->
-    @if(auth()->user()->role != 'kasir')
+    {{-- @if(auth()->user()->role != 'kasir')
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Transaksi</span>
-    </li>
+    </li> --}}
 
     <!-- Pembelian -->
-    <li class="menu-item {{ request()->is('pembelian*') ? 'active' : '' }}">
+    {{-- <li class="menu-item {{ request()->is('pembelian*') ? 'active' : '' }}">
         <a href="{{ route('pembelian.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-cart"></i>
             <div>Pembelian</div>
         </a>
-    </li>
+    </li> --}}
 
     <!-- Produksi -->
-    <li class="menu-item {{ Route::currentRouteName() == 'produksi.index' ? 'active' : '' }}">
+    {{-- <li class="menu-item {{ Route::currentRouteName() == 'produksi.index' ? 'active' : '' }}">
         <a href="{{ route('produksi.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-package"></i>
             <div>Produksi</div>
         </a>
     </li>
-    @endif
+    @endif --}}
 
     <!-- Penjualan (Tampilkan untuk semua) -->
-    <li class="menu-item {{ request()->is('penjualan*') ? 'active' : '' }}">
+    {{-- <li class="menu-item {{ request()->is('penjualan*') ? 'active' : '' }}">
         <a href="{{ route('penjualan.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-store"></i>
             <div>Penjualan</div>
         </a>
-    </li>
+    </li> --}}
 
     <!-- Gaji Karyawan -->
-    @if(auth()->user()->role != 'kasir')
+    {{-- @if(auth()->user()->role != 'kasir')
     <li class="menu-item {{ request()->is('gaji*') ? 'active' : '' }}">
         <a href="{{ route('gaji.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-wallet"></i>
             <div>Gaji Karyawan</div>
         </a>
     </li>
-    @endif
+    @endif --}}
 
     <!-- MASTER DATA -->
     @if(auth()->user()->role != 'kasir')
@@ -76,12 +76,12 @@
     </li>
 
     <!-- Bahan Baku -->
-    <li class="menu-item {{ request()->is('bahan-baku*') ? 'active' : '' }}">
+    {{-- <li class="menu-item {{ request()->is('bahan-baku*') ? 'active' : '' }}">
         <a href="{{ route('bahan-baku.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-box"></i>
             <div>Bahan Baku</div>
         </a>
-    </li>
+    </li> --}}
 
     <!-- Produk -->
     <li class="menu-item {{ Route::currentRouteName() == 'produk.index' ? 'active' : '' }}">
@@ -100,13 +100,13 @@
     </li>
 
     <!-- Presensi -->
-    <li class="menu-item {{ request()->is('presensi*') ? 'active' : '' }}">
+    {{-- <li class="menu-item {{ request()->is('presensi*') ? 'active' : '' }}">
         <a href="{{ route('presensi.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-calendar-check"></i>
             <div>Presensi Karyawan</div>
         </a>
     </li>
-    @endif
+    @endif --}}
 
     <!-- Owner -->
     @if(auth()->user()->role == 'owner')
