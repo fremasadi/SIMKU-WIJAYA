@@ -32,12 +32,13 @@ class ProdukController extends Controller
         $request->validate([
             'nama_produk' => 'required|string|max:255',
             'satuan'      => 'required|string|max:20',
+            'stok'        => 'required|numeric|min:0',
         ]);
 
         Produk::create([
             'nama_produk' => $request->nama_produk,
             'satuan'      => $request->satuan,
-            'stok'        => 0, // stok awal
+            'stok'        => $request->stok ?? 0, // stok awal
         ]);
 
         return redirect()
@@ -62,10 +63,11 @@ class ProdukController extends Controller
         $request->validate([
             'nama_produk' => 'required|string|max:255',
             'satuan'      => 'required|string|max:20',
+            'stok'        => 'required|numeric|min:0',
         ]);
 
         $produk = Produk::findOrFail($id);
-        $produk->update($request->only('nama_produk', 'satuan'));
+        $produk->update($request->only('nama_produk', 'satuan', 'stok'));
 
         return redirect()
             ->route('produk.index')

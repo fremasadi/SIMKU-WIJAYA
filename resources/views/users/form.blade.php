@@ -14,7 +14,7 @@
     <label class="form-label">Role</label>
     <select name="role" class="form-control" required>
         <option value="owner" {{ (old('role', $user->role ?? '') == 'owner') ? 'selected' : '' }}>
-            Super Admin
+            Owner
         </option>
         <option value="admin" {{ (old('role', $user->role ?? '') == 'admin') ? 'selected' : '' }}>
             Admin
