@@ -28,45 +28,38 @@
         @endif
 
         <!-- TRANSAKSI -->
-        {{-- @if (auth()->user()->role != 'kasir')
-    <li class="menu-header small text-uppercase">
-        <span class="menu-header-text">Transaksi</span>
-    </li> --}}
+        @if (auth()->user()->role != 'kasir')
+            {{-- <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Transaksi</span>
+            </li> --}}
 
-        <!-- Pembelian -->
-        {{-- <li class="menu-item {{ request()->is('pembelian*') ? 'active' : '' }}">
-        <a href="{{ route('pembelian.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-cart"></i>
-            <div>Pembelian</div>
-        </a>
-    </li> --}}
+            <!-- Pembelian -->
+            {{-- <li class="menu-item {{ request()->is('pembelian*') ? 'active' : '' }}">
+                <a href="{{ route('pembelian.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cart"></i>
+                    <div>Pembelian</div>
+                </a>
+            </li> --}}
 
-        <!-- Produksi -->
-        {{-- <li class="menu-item {{ Route::currentRouteName() == 'produksi.index' ? 'active' : '' }}">
-        <a href="{{ route('produksi.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-package"></i>
-            <div>Produksi</div>
-        </a>
-    </li>
-    @endif --}}
+        @endif
 
         <!-- Penjualan (Tampilkan untuk semua) -->
         {{-- <li class="menu-item {{ request()->is('penjualan*') ? 'active' : '' }}">
-        <a href="{{ route('penjualan.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-store"></i>
-            <div>Penjualan</div>
-        </a>
-    </li> --}}
+            <a href="{{ route('penjualan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store"></i>
+                <div>Penjualan</div>
+            </a>
+        </li> --}}
 
         <!-- Gaji Karyawan -->
         {{-- @if (auth()->user()->role != 'kasir')
-    <li class="menu-item {{ request()->is('gaji*') ? 'active' : '' }}">
-        <a href="{{ route('gaji.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-wallet"></i>
-            <div>Gaji Karyawan</div>
-        </a>
-    </li>
-    @endif --}}
+            <li class="menu-item {{ request()->is('gaji*') ? 'active' : '' }}">
+                <a href="{{ route('gaji.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-wallet"></i>
+                    <div>Gaji Karyawan</div>
+                </a>
+            </li>
+        @endif --}}
 
         <!-- MASTER DATA -->
         @if (auth()->user()->role != 'kasir')
@@ -75,18 +68,27 @@
             </li>
 
             <!-- Bahan Baku -->
-            {{-- <li class="menu-item {{ request()->is('bahan-baku*') ? 'active' : '' }}">
-        <a href="{{ route('bahan-baku.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-box"></i>
-            <div>Bahan Baku</div>
-        </a>
-    </li> --}}
+            <li class="menu-item {{ request()->is('bahan-baku*') ? 'active' : '' }}">
+                <a href="{{ route('bahan-baku.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-box"></i>
+                    <div>Bahan Baku</div>
+                </a>
+            </li>
 
             <!-- Produk -->
             <li class="menu-item {{ Route::currentRouteName() == 'produk.index' ? 'active' : '' }}">
                 <a href="{{ route('produk.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-package"></i>
                     <div>Produk</div>
+                </a>
+            </li>
+
+
+            <!-- Produksi -->
+            <li class="menu-item {{ Route::currentRouteName() == 'produksi.index' ? 'active' : '' }}">
+                <a href="{{ route('produksi.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-package"></i>
+                    <div>Produksi</div>
                 </a>
             </li>
 
