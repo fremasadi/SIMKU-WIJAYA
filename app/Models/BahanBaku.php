@@ -40,4 +40,5 @@ class BahanBaku extends Model
     {
         return $this->hasMany(DetailProduksi::class, 'bahan_baku_id');
     }
+
 }

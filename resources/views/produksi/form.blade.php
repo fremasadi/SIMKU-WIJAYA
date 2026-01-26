@@ -17,7 +17,7 @@
 </div>
 
 <div class="mb-3">
-    <label class="form-label">Jumlah Produksi</label>
+    <label class="form-label">Jumlah Produksi/Pcs</label>
     <input type="number" name="jumlah_produksi" class="form-control" step="0.01" required>
 </div>
 

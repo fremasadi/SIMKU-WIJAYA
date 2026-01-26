@@ -29,7 +29,7 @@
                         <th>#</th>
                         <th>Produk</th>
                         <th>Tanggal Produksi</th>
-                        <th>Jumlah Produksi</th>
+                        <th>Jumlah Produksi/Pcs</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
