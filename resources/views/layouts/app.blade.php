@@ -30,7 +30,7 @@
             {{-- CONTENT WRAPPER - JANGAN TAMBAH CONTAINER LAGI --}}
             <div class="content-wrapper">
                 @yield('content')
-                
+
                 {{-- FOOTER --}}
                 @include('layouts.footer')
             </div>
@@ -44,6 +44,8 @@
 <script src="{{ asset('sneat-1.0.0/assets/vendor/js/bootstrap.js') }}"></script>
 <script src="{{ asset('sneat-1.0.0/assets/vendor/js/menu.js') }}"></script>
 <script src="{{ asset('sneat-1.0.0/assets/js/main.js') }}"></script>
+@stack('scripts')  <!-- Pastikan ini ada di layout -->
+
 
 </body>
 </html>
