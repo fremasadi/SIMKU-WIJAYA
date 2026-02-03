@@ -115,8 +115,8 @@
             </div>
         </div>
     </div>
-
     <!-- Laporan Laba Rugi -->
+    @if(auth()->user()->role != 'kasir')
     <div class="row">
         <div class="col-lg-8 mb-4">
             <div class="card">
@@ -253,6 +253,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Chart Penjualan vs Pembelian -->
     <div class="row">
