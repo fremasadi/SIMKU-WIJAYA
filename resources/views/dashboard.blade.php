@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-
+        @if(auth()->user()->role != 'kasir')
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card">
                 <div class="card-body">
@@ -72,7 +72,10 @@
                 </div>
             </div>
         </div>
+        @endif
 
+
+        @if(auth()->user()->role != 'kasir')
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card">
                 <div class="card-body">
@@ -93,6 +96,7 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card">
@@ -260,7 +264,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Tren Penjualan vs Pembelian (6 Bulan Terakhir)</h5>
+                    <h5 class="mb-0">Tren (6 Bulan Terakhir)</h5>
                 </div>
                 <div class="card-body">
                     <canvas id="chartTren" height="80"></canvas>
@@ -274,44 +278,48 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const chartData = @json($chartData);
+    const isKasir = @json(auth()->user()->role === 'kasir');
 
     const ctx = document.getElementById('chartTren').getContext('2d');
+
+    let datasets = [
+        {
+            label: 'Penjualan',
+            data: chartData.map(d => d.penjualan),
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+            tension: 0.4,
+            fill: true
+        }
+    ];
+
+    // hanya tampilkan pembelian jika bukan kasir
+    if (!isKasir) {
+        datasets.push({
+            label: 'Pembelian',
+            data: chartData.map(d => d.pembelian),
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            tension: 0.4,
+            fill: true
+        });
+    }
+
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: chartData.map(d => d.bulan),
-            datasets: [
-                {
-                    label: 'Penjualan',
-                    data: chartData.map(d => d.penjualan),
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                },
-                {
-                    label: 'Pembelian',
-                    data: chartData.map(d => d.pembelian),
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }
-            ]
+            datasets: datasets
         },
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'top',
-                },
+                legend: { position: 'top' },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
                             let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
+                            if (label) label += ': ';
                             label += 'Rp ' + context.parsed.y.toLocaleString('id-ID');
                             return label;
                         }
@@ -322,9 +330,7 @@
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
-                        }
+                        callback: value => 'Rp ' + value.toLocaleString('id-ID')
                     }
                 }
             }
