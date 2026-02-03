@@ -30,7 +30,7 @@
     </div>
 
     <!-- Statistik Cards -->
-    {{-- <div class="row mb-4">
+    <div class="row mb-4">
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card">
                 <div class="card-body">
@@ -266,7 +266,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
 
 @push('scripts')

@@ -27,6 +27,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>kode penjualan</th>
                         <th>Tanggal</th>
                         <th>User</th>
                         <th>Total</th>
@@ -37,6 +38,7 @@
                     @forelse($penjualans as $p)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $p->kode_penjualan }}</td>
                         <td>{{ $p->tanggal_penjualan->format('d-m-Y') }}</td>
                         <td>{{ $p->user->name }}</td>
                         <td>{{ number_format($p->total,2) }}</td>

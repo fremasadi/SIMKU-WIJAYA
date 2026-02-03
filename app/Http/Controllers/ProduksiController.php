@@ -26,7 +26,7 @@ class ProduksiController extends Controller
     public function create()
     {
         $produks = Produk::orderBy('nama_produk')->get();
-        $bahanBakus = BahanBaku::orderBy('nama_bahan')->get();
+        $bahanBakus = BahanBaku::where('stok', '>', 0)->orderBy('nama_bahan')->get();
         return view('produksi.create', compact('produks', 'bahanBakus'));
     }
 
@@ -71,9 +71,7 @@ class ProduksiController extends Controller
             $produk->increment('stok', $request->jumlah_produksi);
         });
 
-        return redirect()
-            ->route('produksi.index')
-            ->with('success', 'Produksi berhasil disimpan');
+        return redirect()->route('produksi.index')->with('success', 'Produksi berhasil disimpan');
     }
 
     /**
@@ -104,8 +102,6 @@ class ProduksiController extends Controller
             $produksi->delete();
         });
 
-        return redirect()
-            ->route('produksi.index')
-            ->with('success', 'Produksi berhasil dihapus');
+        return redirect()->route('produksi.index')->with('success', 'Produksi berhasil dihapus');
     }
 }

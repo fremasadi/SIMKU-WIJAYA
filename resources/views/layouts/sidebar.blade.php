@@ -18,48 +18,47 @@
     <ul class="menu-inner py-1">
 
         <!-- Dashboard -->
-        @if (auth()->user()->role != 'kasir')
-            <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
-                <a href="{{ url('/dashboard') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                    <div>Dashboard</div>
-                </a>
-            </li>
-        @endif
+        <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
+            <a href="{{ url('/dashboard') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div>Dashboard</div>
+            </a>
+        </li>
 
         <!-- TRANSAKSI -->
         @if (auth()->user()->role != 'kasir')
-            {{-- <li class="menu-header small text-uppercase">
+            <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Transaksi</span>
-            </li> --}}
+            </li>
 
             <!-- Pembelian -->
-            {{-- <li class="menu-item {{ request()->is('pembelian*') ? 'active' : '' }}">
+            <li class="menu-item {{ request()->is('pembelian*') ? 'active' : '' }}">
                 <a href="{{ route('pembelian.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart"></i>
                     <div>Pembelian</div>
                 </a>
-            </li> --}}
-
+            </li>
         @endif
+        @if (auth()->user()->role == 'kasir')
 
         <!-- Penjualan (Tampilkan untuk semua) -->
-        {{-- <li class="menu-item {{ request()->is('penjualan*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->is('penjualan*') ? 'active' : '' }}">
             <a href="{{ route('penjualan.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-store"></i>
                 <div>Penjualan</div>
             </a>
-        </li> --}}
+        </li>
+        @endif
 
         <!-- Gaji Karyawan -->
-        {{-- @if (auth()->user()->role != 'kasir')
+        @if (auth()->user()->role != 'kasir')
             <li class="menu-item {{ request()->is('gaji*') ? 'active' : '' }}">
                 <a href="{{ route('gaji.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-wallet"></i>
                     <div>Gaji Karyawan</div>
                 </a>
             </li>
-        @endif --}}
+        @endif
 
         <!-- MASTER DATA -->
         @if (auth()->user()->role != 'kasir')
@@ -101,13 +100,12 @@
             </li>
 
             <!-- Presensi -->
-            {{-- <li class="menu-item {{ request()->is('presensi*') ? 'active' : '' }}">
-        <a href="{{ route('presensi.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-calendar-check"></i>
-            <div>Presensi Karyawan</div>
-        </a>
-    </li>
-   --}}
+            <li class="menu-item {{ request()->is('presensi*') ? 'active' : '' }}">
+                <a href="{{ route('presensi.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                    <div>Presensi Karyawan</div>
+                </a>
+            </li>
         @endif
         <!-- Owner -->
         @if (auth()->user()->role == 'owner')
