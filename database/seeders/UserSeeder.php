@@ -11,19 +11,19 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Super Admin
-        // User::create([
-        //     'name' => 'Owner',
-        //     'email' => 'owner2@gmail.com',
-        //     'password' => Hash::make('password123'),
-        //     'role' => 'owner',
-        // ]);
+        User::create([
+            'name' => 'Owner',
+            'email' => 'owner@gmail.com',
+            'password' => Hash::make('password123'),
+            'role' => 'owner',
+        ]);
 
-        // // Admin Keuangan
-        // User::create([
-        //     'name' => 'Admin Keuangan',
-        //     'email' => 'admin2@gmail.com',
-        //     'password' => Hash::make('password123'),
-        //     'role' => 'admin',
-        // ]);
+        // Admin Keuangan
+        User::create([
+            'name' => 'Admin Keuangan',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password123'),
+            'role' => 'admin',
+        ]);
     }
 }

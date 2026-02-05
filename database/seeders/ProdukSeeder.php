@@ -11,44 +11,44 @@ class ProdukSeeder extends Seeder
     {
         $produks = [
             [
-                'nama_produk' => 'Sepatu Kulit Pria',
-                'stok' => 22.00,
-                'satuan' => 'Pasang',
+                'nama_produk' => 'Kerupuk Udang Premium',
+                'stok' => 150.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Sepatu Kulit Wanita',
-                'stok' => 16.00,
-                'satuan' => 'Pasang',
+                'nama_produk' => 'Kerupuk Ikan Tenggiri',
+                'stok' => 120.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Tas Kulit Selempang',
-                'stok' => 8.00,
-                'satuan' => 'Pcs',
+                'nama_produk' => 'Kerupuk Bawang',
+                'stok' => 200.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Tas Kulit Ransel',
-                'stok' => 5.00,
-                'satuan' => 'Pcs',
+                'nama_produk' => 'Kerupuk Kulit Sapi',
+                'stok' => 100.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Dompet Kulit Pria',
-                'stok' => 20.00,
-                'satuan' => 'Pcs',
+                'nama_produk' => 'Kerupuk Singkong',
+                'stok' => 180.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Dompet Kulit Wanita',
-                'stok' => 12.00,
-                'satuan' => 'Pcs',
+                'nama_produk' => 'Kerupuk Gendar',
+                'stok' => 160.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Ikat Pinggang Kulit',
-                'stok' => 26.00,
-                'satuan' => 'Pcs',
+                'nama_produk' => 'Kerupuk Terasi',
+                'stok' => 130.00,
+                'satuan' => 'Kg',
             ],
             [
-                'nama_produk' => 'Jaket Kulit',
-                'stok' => 5.00,
-                'satuan' => 'Pcs',
+                'nama_produk' => 'Kerupuk Palembang',
+                'stok' => 140.00,
+                'satuan' => 'Kg',
             ],
         ];
 

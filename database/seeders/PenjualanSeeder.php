@@ -10,125 +10,177 @@ class PenjualanSeeder extends Seeder
 {
     public function run(): void
     {
-        // Harga jual produk
+        // Harga jual produk kerupuk per Kg
         $hargaJual = [
-            'Sepatu Kulit Pria' => 450000,
-            'Sepatu Kulit Wanita' => 425000,
-            'Tas Kulit Selempang' => 350000,
-            'Tas Kulit Ransel' => 550000,
-            'Dompet Kulit Pria' => 175000,
-            'Dompet Kulit Wanita' => 165000,
-            'Ikat Pinggang Kulit' => 125000,
-            'Jaket Kulit' => 850000,
+            'Kerupuk Udang Premium' => 45000,
+            'Kerupuk Ikan Tenggiri' => 38000,
+            'Kerupuk Bawang' => 28000,
+            'Kerupuk Kulit Sapi' => 50000,
+            'Kerupuk Singkong' => 22000,
+            'Kerupuk Gendar' => 25000,
+            'Kerupuk Terasi' => 35000,
+            'Kerupuk Palembang' => 40000,
         ];
 
         $penjualanList = [
             // Penjualan 1 - Oktober
             [
-                'tanggal_penjualan' => '2025-10-18',
+                'tanggal_penjualan' => '2025-10-05',
                 'user_id' => 1,
                 'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Pria', 'jumlah' => 5],
-                    ['nama_produk' => 'Dompet Kulit Pria', 'jumlah' => 8],
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 50],
+                    ['nama_produk' => 'Kerupuk Bawang', 'jumlah' => 80],
                 ],
             ],
             // Penjualan 2 - Oktober
             [
+                'tanggal_penjualan' => '2025-10-12',
+                'user_id' => 2,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Ikan Tenggiri', 'jumlah' => 60],
+                    ['nama_produk' => 'Kerupuk Kulit Sapi', 'jumlah' => 40],
+                ],
+            ],
+            // Penjualan 3 - Oktober
+            [
+                'tanggal_penjualan' => '2025-10-20',
+                'user_id' => 1,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Singkong', 'jumlah' => 100],
+                    ['nama_produk' => 'Kerupuk Gendar', 'jumlah' => 80],
+                    ['nama_produk' => 'Kerupuk Terasi', 'jumlah' => 50],
+                ],
+            ],
+            // Penjualan 4 - Oktober
+            [
                 'tanggal_penjualan' => '2025-10-28',
                 'user_id' => 2,
                 'items' => [
-                    ['nama_produk' => 'Tas Kulit Selempang', 'jumlah' => 3],
-                    ['nama_produk' => 'Ikat Pinggang Kulit', 'jumlah' => 5],
-                ],
-            ],
-            // Penjualan 3 - November
-            [
-                'tanggal_penjualan' => '2025-11-10',
-                'user_id' => 1,
-                'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Pria', 'jumlah' => 8],
-                    ['nama_produk' => 'Dompet Kulit Pria', 'jumlah' => 10],
-                ],
-            ],
-            // Penjualan 4 - November
-            [
-                'tanggal_penjualan' => '2025-11-18',
-                'user_id' => 2,
-                'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Wanita', 'jumlah' => 5],
-                    ['nama_produk' => 'Tas Kulit Selempang', 'jumlah' => 4],
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 60],
+                    ['nama_produk' => 'Kerupuk Palembang', 'jumlah' => 55],
                 ],
             ],
             // Penjualan 5 - November
             [
+                'tanggal_penjualan' => '2025-11-05',
+                'user_id' => 1,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Bawang', 'jumlah' => 90],
+                    ['nama_produk' => 'Kerupuk Ikan Tenggiri', 'jumlah' => 70],
+                ],
+            ],
+            // Penjualan 6 - November
+            [
+                'tanggal_penjualan' => '2025-11-12',
+                'user_id' => 2,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Kulit Sapi', 'jumlah' => 50],
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 55],
+                    ['nama_produk' => 'Kerupuk Gendar', 'jumlah' => 60],
+                ],
+            ],
+            // Penjualan 7 - November
+            [
+                'tanggal_penjualan' => '2025-11-20',
+                'user_id' => 1,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Singkong', 'jumlah' => 120],
+                    ['nama_produk' => 'Kerupuk Terasi', 'jumlah' => 65],
+                ],
+            ],
+            // Penjualan 8 - November
+            [
                 'tanggal_penjualan' => '2025-11-28',
-                'user_id' => 1,
-                'items' => [
-                    ['nama_produk' => 'Dompet Kulit Wanita', 'jumlah' => 8],
-                    ['nama_produk' => 'Ikat Pinggang Kulit', 'jumlah' => 6],
-                ],
-            ],
-            // Penjualan 6 - Desember
-            [
-                'tanggal_penjualan' => '2025-12-05',
                 'user_id' => 2,
                 'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Pria', 'jumlah' => 10],
-                    ['nama_produk' => 'Tas Kulit Ransel', 'jumlah' => 3],
-                ],
-            ],
-            // Penjualan 7 - Desember
-            [
-                'tanggal_penjualan' => '2025-12-15',
-                'user_id' => 1,
-                'items' => [
-                    ['nama_produk' => 'Jaket Kulit', 'jumlah' => 3],
-                    ['nama_produk' => 'Dompet Kulit Pria', 'jumlah' => 12],
-                ],
-            ],
-            // Penjualan 8 - Desember
-            [
-                'tanggal_penjualan' => '2025-12-22',
-                'user_id' => 2,
-                'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Wanita', 'jumlah' => 6],
-                    ['nama_produk' => 'Dompet Kulit Wanita', 'jumlah' => 5],
+                    ['nama_produk' => 'Kerupuk Palembang', 'jumlah' => 70],
+                    ['nama_produk' => 'Kerupuk Bawang', 'jumlah' => 85],
                 ],
             ],
             // Penjualan 9 - Desember
             [
-                'tanggal_penjualan' => '2025-12-28',
+                'tanggal_penjualan' => '2025-12-05',
                 'user_id' => 1,
                 'items' => [
-                    ['nama_produk' => 'Ikat Pinggang Kulit', 'jumlah' => 8],
-                    ['nama_produk' => 'Tas Kulit Selempang', 'jumlah' => 5],
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 80],
+                    ['nama_produk' => 'Kerupuk Ikan Tenggiri', 'jumlah' => 75],
                 ],
             ],
-            // Penjualan 10 - Januari
+            // Penjualan 10 - Desember
+            [
+                'tanggal_penjualan' => '2025-12-12',
+                'user_id' => 2,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Kulit Sapi', 'jumlah' => 60],
+                    ['nama_produk' => 'Kerupuk Gendar', 'jumlah' => 90],
+                    ['nama_produk' => 'Kerupuk Terasi', 'jumlah' => 55],
+                ],
+            ],
+            // Penjualan 11 - Desember
+            [
+                'tanggal_penjualan' => '2025-12-18',
+                'user_id' => 1,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Singkong', 'jumlah' => 130],
+                    ['nama_produk' => 'Kerupuk Bawang', 'jumlah' => 100],
+                ],
+            ],
+            // Penjualan 12 - Desember (menjelang akhir tahun - volume besar)
+            [
+                'tanggal_penjualan' => '2025-12-24',
+                'user_id' => 2,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 100],
+                    ['nama_produk' => 'Kerupuk Palembang', 'jumlah' => 80],
+                    ['nama_produk' => 'Kerupuk Ikan Tenggiri', 'jumlah' => 65],
+                ],
+            ],
+            // Penjualan 13 - Desember
+            [
+                'tanggal_penjualan' => '2025-12-30',
+                'user_id' => 1,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Bawang', 'jumlah' => 95],
+                    ['nama_produk' => 'Kerupuk Kulit Sapi', 'jumlah' => 45],
+                ],
+            ],
+            // Penjualan 14 - Januari
             [
                 'tanggal_penjualan' => '2026-01-08',
                 'user_id' => 2,
                 'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Pria', 'jumlah' => 12],
-                    ['nama_produk' => 'Jaket Kulit', 'jumlah' => 2],
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 70],
+                    ['nama_produk' => 'Kerupuk Singkong', 'jumlah' => 110],
+                    ['nama_produk' => 'Kerupuk Terasi', 'jumlah' => 60],
                 ],
             ],
-            // Penjualan 11 - Januari
+            // Penjualan 15 - Januari
             [
-                'tanggal_penjualan' => '2026-01-18',
+                'tanggal_penjualan' => '2026-01-15',
                 'user_id' => 1,
                 'items' => [
-                    ['nama_produk' => 'Dompet Kulit Pria', 'jumlah' => 15],
-                    ['nama_produk' => 'Ikat Pinggang Kulit', 'jumlah' => 10],
+                    ['nama_produk' => 'Kerupuk Ikan Tenggiri', 'jumlah' => 80],
+                    ['nama_produk' => 'Kerupuk Gendar', 'jumlah' => 75],
+                    ['nama_produk' => 'Kerupuk Palembang', 'jumlah' => 60],
                 ],
             ],
-            // Penjualan 12 - Januari
+            // Penjualan 16 - Januari
             [
-                'tanggal_penjualan' => '2026-01-28',
+                'tanggal_penjualan' => '2026-01-22',
                 'user_id' => 2,
                 'items' => [
-                    ['nama_produk' => 'Sepatu Kulit Wanita', 'jumlah' => 8],
-                    ['nama_produk' => 'Tas Kulit Ransel', 'jumlah' => 2],
+                    ['nama_produk' => 'Kerupuk Bawang', 'jumlah' => 110],
+                    ['nama_produk' => 'Kerupuk Kulit Sapi', 'jumlah' => 55],
+                ],
+            ],
+            // Penjualan 17 - Januari
+            [
+                'tanggal_penjualan' => '2026-01-28',
+                'user_id' => 1,
+                'items' => [
+                    ['nama_produk' => 'Kerupuk Udang Premium', 'jumlah' => 75],
+                    ['nama_produk' => 'Kerupuk Singkong', 'jumlah' => 90],
+                    ['nama_produk' => 'Kerupuk Terasi', 'jumlah' => 70],
                 ],
             ],
         ];
