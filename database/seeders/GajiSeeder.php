@@ -18,6 +18,8 @@ class GajiSeeder extends Seeder
             'Quality Control' => 4000000,
             'Bagian Gudang' => 3500000,
             'Bagian Pemasaran' => 4000000,
+            'Karyawan Jemur' => 3000000, // tambah ini
+
         ];
 
         $karyawans = Karyawan::all();
