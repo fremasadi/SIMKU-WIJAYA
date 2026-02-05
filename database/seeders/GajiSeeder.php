@@ -12,13 +12,8 @@ class GajiSeeder extends Seeder
     {
         // Gaji bulanan berdasarkan jabatan
         $gajiPerJabatan = [
-            'Kepala Produksi' => 5500000,
-            'Pengrajin Kulit' => 4200000,
-            'Penjahit' => 3800000,
-            'Quality Control' => 4000000,
-            'Bagian Gudang' => 3500000,
-            'Bagian Pemasaran' => 4000000,
-            'Karyawan Jemur' => 3000000, // tambah ini
+            'Karyawan Jemur' => 30000,
+            'Karyawan Produksi' => 40000,
 
         ];
 
