@@ -39,7 +39,7 @@
                 </a>
             </li>
         @endif
-        @if (auth()->user()->role == 'kasir')
+        {{-- @if (auth()->user()->role == 'kasir') --}}
 
         <!-- Penjualan (Tampilkan untuk semua) -->
         <li class="menu-item {{ request()->is('penjualan*') ? 'active' : '' }}">
@@ -48,7 +48,7 @@
                 <div>Penjualan</div>
             </a>
         </li>
-        @endif
+        {{-- @endif --}}
 
         <!-- Gaji Karyawan -->
         @if (auth()->user()->role != 'kasir')
