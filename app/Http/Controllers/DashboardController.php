@@ -54,12 +54,12 @@ class DashboardController extends Controller
         $chartData = $this->getChartData();
 
         // STATISTIK RINGKAS
-        $totalPenjualanBulanIni = Penjualan::whereMonth('tanggal_penjualan', now()->month)
-            ->whereYear('tanggal_penjualan', now()->year)
+        $totalPenjualanBulanIni = Penjualan::whereMonth('tanggal_penjualan', $bulan)
+            ->whereYear('tanggal_penjualan', $tahun)
             ->count();
 
-        $totalPembelianBulanIni = Pembelian::whereMonth('tanggal_pembelian', now()->month)
-            ->whereYear('tanggal_pembelian', now()->year)
+        $totalPembelianBulanIni = Pembelian::whereMonth('tanggal_pembelian', $bulan)
+            ->whereYear('tanggal_pembelian', $tahun)
             ->count();
 
         $stokBahanBaku = BahanBaku::count();
