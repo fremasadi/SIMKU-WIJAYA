@@ -16,153 +16,155 @@ class ProduksiSeeder extends Seeder
         $bahanBakus = BahanBaku::all()->keyBy('nama_bahan');
 
         $produksiList = [
-            // Produksi 1 - Sepatu Kulit Pria (Oktober)
+            // Produksi 1 - Kerupuk Udang Premium (Oktober)
             [
                 'tanggal_produksi' => '2025-10-10',
-                'produk' => 'Sepatu Kulit Pria',
-                'jumlah_produksi' => 20,
+                'produk' => 'Kerupuk Udang Premium',
+                'jumlah_produksi' => 100,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade A', 'jumlah' => 10],
-                    ['nama' => 'Sol Sepatu Karet', 'jumlah' => 20],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 4],
-                    ['nama' => 'Lem Kulit', 'jumlah' => 2],
-                    ['nama' => 'Pewarna Kulit', 'jumlah' => 1.5],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 40],
+                    ['nama' => 'Udang Segar', 'jumlah' => 15],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 3],
+                    ['nama' => 'Garam', 'jumlah' => 2],
+                    ['nama' => 'Penyedap Rasa', 'jumlah' => 2],
                 ],
             ],
-            // Produksi 2 - Dompet Kulit Pria (Oktober)
+            // Produksi 2 - Kerupuk Bawang (Oktober)
             [
                 'tanggal_produksi' => '2025-10-15',
-                'produk' => 'Dompet Kulit Pria',
-                'jumlah_produksi' => 30,
+                'produk' => 'Kerupuk Bawang',
+                'jumlah_produksi' => 120,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade B', 'jumlah' => 8],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 3],
-                    ['nama' => 'Kancing Snap', 'jumlah' => 30],
-                    ['nama' => 'Kain Pelapis Dalam', 'jumlah' => 5],
+                    ['nama' => 'Tepung Terigu', 'jumlah' => 25],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 30],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 8],
+                    ['nama' => 'Garam', 'jumlah' => 3],
+                    ['nama' => 'Minyak Goreng', 'jumlah' => 10],
                 ],
             ],
-            // Produksi 3 - Tas Kulit Selempang (Oktober)
+            // Produksi 3 - Kerupuk Ikan Tenggiri (Oktober)
             [
                 'tanggal_produksi' => '2025-10-25',
-                'produk' => 'Tas Kulit Selempang',
-                'jumlah_produksi' => 15,
+                'produk' => 'Kerupuk Ikan Tenggiri',
+                'jumlah_produksi' => 80,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade A', 'jumlah' => 12],
-                    ['nama' => 'Resleting YKK', 'jumlah' => 15],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 3],
-                    ['nama' => 'Kain Pelapis Dalam', 'jumlah' => 6],
-                    ['nama' => 'Lem Kulit', 'jumlah' => 1.5],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 30],
+                    ['nama' => 'Ikan Tenggiri', 'jumlah' => 12],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 2],
+                    ['nama' => 'Garam', 'jumlah' => 2],
+                    ['nama' => 'Penyedap Rasa', 'jumlah' => 1.5],
                 ],
             ],
-            // Produksi 4 - Ikat Pinggang Kulit (November)
+            // Produksi 4 - Kerupuk Singkong (November)
             [
                 'tanggal_produksi' => '2025-11-05',
-                'produk' => 'Ikat Pinggang Kulit',
-                'jumlah_produksi' => 25,
+                'produk' => 'Kerupuk Singkong',
+                'jumlah_produksi' => 150,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade B', 'jumlah' => 6],
-                    ['nama' => 'Kancing Snap', 'jumlah' => 25],
-                    ['nama' => 'Pewarna Kulit', 'jumlah' => 1],
+                    ['nama' => 'Singkong', 'jumlah' => 80],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 20],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 3],
+                    ['nama' => 'Garam', 'jumlah' => 3],
                 ],
             ],
-            // Produksi 5 - Sepatu Kulit Wanita (November)
+            // Produksi 5 - Kerupuk Kulit Sapi (November)
             [
                 'tanggal_produksi' => '2025-11-12',
-                'produk' => 'Sepatu Kulit Wanita',
-                'jumlah_produksi' => 15,
+                'produk' => 'Kerupuk Kulit Sapi',
+                'jumlah_produksi' => 60,
                 'bahan' => [
-                    ['nama' => 'Kulit Domba', 'jumlah' => 8],
-                    ['nama' => 'Sol Sepatu Karet', 'jumlah' => 15],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 3],
-                    ['nama' => 'Lem Kulit', 'jumlah' => 1.5],
-                    ['nama' => 'Pewarna Kulit', 'jumlah' => 1],
+                    ['nama' => 'Kulit Sapi Mentah', 'jumlah' => 25],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 2],
+                    ['nama' => 'Garam', 'jumlah' => 2],
+                    ['nama' => 'Minyak Goreng', 'jumlah' => 15],
                 ],
             ],
-            // Produksi 6 - Dompet Kulit Wanita (November)
+            // Produksi 6 - Kerupuk Gendar (November)
             [
                 'tanggal_produksi' => '2025-11-20',
-                'produk' => 'Dompet Kulit Wanita',
-                'jumlah_produksi' => 25,
+                'produk' => 'Kerupuk Gendar',
+                'jumlah_produksi' => 100,
                 'bahan' => [
-                    ['nama' => 'Kulit Domba', 'jumlah' => 6],
-                    ['nama' => 'Resleting YKK', 'jumlah' => 25],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 2.5],
-                    ['nama' => 'Kain Pelapis Dalam', 'jumlah' => 4],
+                    ['nama' => 'Tepung Terigu', 'jumlah' => 20],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 25],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 3],
+                    ['nama' => 'Garam', 'jumlah' => 2],
+                    ['nama' => 'Penyedap Rasa', 'jumlah' => 1.5],
                 ],
             ],
-            // Produksi 7 - Tas Kulit Ransel (Desember)
+            // Produksi 7 - Kerupuk Terasi (Desember)
             [
                 'tanggal_produksi' => '2025-12-01',
-                'produk' => 'Tas Kulit Ransel',
-                'jumlah_produksi' => 10,
+                'produk' => 'Kerupuk Terasi',
+                'jumlah_produksi' => 90,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade A', 'jumlah' => 15],
-                    ['nama' => 'Resleting YKK', 'jumlah' => 20],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 4],
-                    ['nama' => 'Kain Pelapis Dalam', 'jumlah' => 8],
-                    ['nama' => 'Lem Kulit', 'jumlah' => 2],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 35],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 3],
+                    ['nama' => 'Garam', 'jumlah' => 2],
+                    ['nama' => 'Penyedap Rasa', 'jumlah' => 3],
                 ],
             ],
-            // Produksi 8 - Jaket Kulit (Desember)
+            // Produksi 8 - Kerupuk Palembang (Desember)
             [
                 'tanggal_produksi' => '2025-12-10',
-                'produk' => 'Jaket Kulit',
-                'jumlah_produksi' => 8,
+                'produk' => 'Kerupuk Palembang',
+                'jumlah_produksi' => 100,
                 'bahan' => [
-                    ['nama' => 'Kulit Domba', 'jumlah' => 16],
-                    ['nama' => 'Resleting YKK', 'jumlah' => 8],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 4],
-                    ['nama' => 'Kain Pelapis Dalam', 'jumlah' => 10],
-                    ['nama' => 'Kancing Snap', 'jumlah' => 24],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 35],
+                    ['nama' => 'Ikan Tenggiri', 'jumlah' => 15],
+                    ['nama' => 'Udang Segar', 'jumlah' => 8],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 3],
+                    ['nama' => 'Garam', 'jumlah' => 2],
                 ],
             ],
-            // Produksi 9 - Sepatu Kulit Pria batch 2 (Desember)
+            // Produksi 9 - Kerupuk Udang Premium batch 2 (Desember)
             [
                 'tanggal_produksi' => '2025-12-20',
-                'produk' => 'Sepatu Kulit Pria',
-                'jumlah_produksi' => 25,
+                'produk' => 'Kerupuk Udang Premium',
+                'jumlah_produksi' => 120,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade A', 'jumlah' => 13],
-                    ['nama' => 'Sol Sepatu Karet', 'jumlah' => 25],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 5],
-                    ['nama' => 'Lem Kulit', 'jumlah' => 2.5],
-                    ['nama' => 'Pewarna Kulit', 'jumlah' => 2],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 50],
+                    ['nama' => 'Udang Segar', 'jumlah' => 20],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 4],
+                    ['nama' => 'Garam', 'jumlah' => 3],
+                    ['nama' => 'Penyedap Rasa', 'jumlah' => 2.5],
                 ],
             ],
-            // Produksi 10 - Ikat Pinggang batch 2 (Januari)
+            // Produksi 10 - Kerupuk Bawang batch 2 (Januari)
             [
                 'tanggal_produksi' => '2026-01-05',
-                'produk' => 'Ikat Pinggang Kulit',
-                'jumlah_produksi' => 30,
+                'produk' => 'Kerupuk Bawang',
+                'jumlah_produksi' => 130,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade B', 'jumlah' => 8],
-                    ['nama' => 'Kancing Snap', 'jumlah' => 30],
-                    ['nama' => 'Pewarna Kulit', 'jumlah' => 1.5],
+                    ['nama' => 'Tepung Terigu', 'jumlah' => 28],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 35],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 10],
+                    ['nama' => 'Garam', 'jumlah' => 3],
+                    ['nama' => 'Minyak Goreng', 'jumlah' => 12],
                 ],
             ],
-            // Produksi 11 - Dompet Kulit Pria batch 2 (Januari)
+            // Produksi 11 - Kerupuk Singkong batch 2 (Januari)
             [
                 'tanggal_produksi' => '2026-01-15',
-                'produk' => 'Dompet Kulit Pria',
-                'jumlah_produksi' => 35,
+                'produk' => 'Kerupuk Singkong',
+                'jumlah_produksi' => 160,
                 'bahan' => [
-                    ['nama' => 'Kulit Sapi Grade B', 'jumlah' => 10],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 3.5],
-                    ['nama' => 'Kancing Snap', 'jumlah' => 35],
-                    ['nama' => 'Kain Pelapis Dalam', 'jumlah' => 6],
+                    ['nama' => 'Singkong', 'jumlah' => 90],
+                    ['nama' => 'Tepung Tapioka', 'jumlah' => 25],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 4],
+                    ['nama' => 'Garam', 'jumlah' => 3],
                 ],
             ],
-            // Produksi 12 - Sepatu Kulit Wanita batch 2 (Januari)
+            // Produksi 12 - Kerupuk Kulit Sapi batch 2 (Januari)
             [
                 'tanggal_produksi' => '2026-01-25',
-                'produk' => 'Sepatu Kulit Wanita',
-                'jumlah_produksi' => 20,
+                'produk' => 'Kerupuk Kulit Sapi',
+                'jumlah_produksi' => 70,
                 'bahan' => [
-                    ['nama' => 'Kulit Domba', 'jumlah' => 10],
-                    ['nama' => 'Sol Sepatu Karet', 'jumlah' => 20],
-                    ['nama' => 'Benang Jahit Kulit', 'jumlah' => 4],
-                    ['nama' => 'Lem Kulit', 'jumlah' => 2],
-                    ['nama' => 'Pewarna Kulit', 'jumlah' => 1.5],
+                    ['nama' => 'Kulit Sapi Mentah', 'jumlah' => 30],
+                    ['nama' => 'Bawang Putih', 'jumlah' => 2.5],
+                    ['nama' => 'Garam', 'jumlah' => 2],
+                    ['nama' => 'Minyak Goreng', 'jumlah' => 18],
                 ],
             ],
         ];
