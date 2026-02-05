@@ -114,7 +114,7 @@
         {{-- ================= ADMIN / OWNER ================= --}}
         @if(auth()->user()->role == 'owner')
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Admin</span>
+            <span class="menu-header-text">Owner</span>
         </li>
 
         <li class="menu-item {{ request()->is('users*') ? 'active' : '' }}">
