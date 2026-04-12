@@ -22,6 +22,25 @@
             </a>
         </div>
 
+        <div class="card-body border-bottom">
+            <form action="{{ route('penjualan.index') }}" method="GET" class="row gx-3 gy-2 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label" for="start_date">Dari Tanggal</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request('start_date') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="end_date">Sampai Tanggal</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request('end_date') }}">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-filter-alt me-1"></i> Filter
+                    </button>
+                    <a href="{{ route('penjualan.index') }}" class="btn btn-label-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>

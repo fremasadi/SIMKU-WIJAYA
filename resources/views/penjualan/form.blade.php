@@ -27,7 +27,7 @@
                     <select name="produk_id[]" class="form-control" required>
                         <option value="">-- Pilih Produk --</option>
                         @foreach($produks as $produk)
-                        <option value="{{ $produk->id }}">{{ $produk->nama_produk }}</option>
+                        <option value="{{ $produk->id }}" data-stok="{{ $produk->stok }}">{{ $produk->nama_produk }} (Stok: {{ $produk->stok }})</option>
                         @endforeach
                     </select>
                 </td>
@@ -43,6 +43,7 @@
 <a href="{{ route('penjualan.index') }}" class="btn btn-secondary">Kembali</a>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function(){
     $('#addRow').click(function(){
@@ -54,6 +55,50 @@ $(document).ready(function(){
     $('#detailTable').on('click', '.removeRow', function(){
         if($('#detailTable tbody tr').length > 1){
             $(this).closest('tr').remove();
+        }
+    });
+
+    // Validasi stok saat input jumlah diubah
+    $('#detailTable').on('input', 'input[name="jumlah[]"]', function(){
+        let tr = $(this).closest('tr');
+        let select = tr.find('select[name="produk_id[]"]');
+        let option = select.find('option:selected');
+        
+        if(option.val() === "") return; // Abaikan jika belum pilih produk
+
+        let stok = parseFloat(option.data('stok'));
+        let jumlah = parseFloat($(this).val());
+
+        if (jumlah > stok) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stok Tidak Cukup!',
+                text: 'Jumlah melebihi stok yang tersedia (' + stok + ')!',
+                confirmButtonText: 'Mengerti'
+            });
+            $(this).val(stok); // Set ke maksimum stok
+        }
+    });
+
+    // Validasi stok saat pilihan produk diubah (jika jumlah sudah terisi)
+    $('#detailTable').on('change', 'select[name="produk_id[]"]', function(){
+        let tr = $(this).closest('tr');
+        let option = $(this).find('option:selected');
+        let jumlahInput = tr.find('input[name="jumlah[]"]');
+        
+        let stok = parseFloat(option.data('stok'));
+        jumlahInput.attr('max', stok);
+
+        let jumlah = parseFloat(jumlahInput.val());
+
+        if (!isNaN(jumlah) && jumlah > stok) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stok Tidak Cukup!',
+                text: 'Jumlah melebihi stok yang tersedia (' + stok + ')!',
+                confirmButtonText: 'Mengerti'
+            });
+            jumlahInput.val(stok);
         }
     });
 });

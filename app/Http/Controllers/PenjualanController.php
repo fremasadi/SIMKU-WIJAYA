@@ -14,9 +14,18 @@ class PenjualanController extends Controller
     /**
      * Menampilkan daftar penjualan
      */
-    public function index()
+    public function index(Request $request)
     {
-        $penjualans = Penjualan::with('user')->latest()->get();
+        $query = Penjualan::with('user')->latest();
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('tanggal_penjualan', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('tanggal_penjualan', '<=', $request->end_date);
+        }
+
+        $penjualans = $query->get();
         return view('penjualan.index', compact('penjualans'));
     }
 

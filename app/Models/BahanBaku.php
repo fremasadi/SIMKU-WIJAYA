@@ -19,7 +19,7 @@ class BahanBaku extends Model
     ];
 
     protected $casts = [
-        'stok' => 'decimal:2',
+        'stok' => 'integer',
         'harga_satuan' => 'decimal:2',
     ];
 

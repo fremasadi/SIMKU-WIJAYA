@@ -18,7 +18,7 @@ class Produk extends Model
     ];
 
     protected $casts = [
-        'stok' => 'decimal:2',
+        'stok' => 'integer',
     ];
 
     /**
