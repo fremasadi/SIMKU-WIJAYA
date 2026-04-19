@@ -25,8 +25,9 @@ class PenjualanController extends Controller
             $query->whereDate('tanggal_penjualan', '<=', $request->end_date);
         }
 
+        $totalPenjualan = (clone $query)->sum('total');
         $penjualans = $query->get();
-        return view('penjualan.index', compact('penjualans'));
+        return view('penjualan.index', compact('penjualans', 'totalPenjualan'));
     }
 
     /**
