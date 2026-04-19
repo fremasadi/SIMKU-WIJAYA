@@ -34,13 +34,29 @@
             <span class="menu-header-text">Transaksi</span>
         </li>
 
-        {{-- Penjualan untuk semua role --}}
+        {{-- Menu kasir --}}
+        @if(auth()->user()->role == 'kasir')
+        <li class="menu-item {{ request()->is('penjualan/create') ? 'active' : '' }}">
+            <a href="{{ route('penjualan.create') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-desktop"></i>
+                <div>POS</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('penjualan', 'penjualan/*') && !request()->is('penjualan/create') ? 'active' : '' }}">
+            <a href="{{ route('penjualan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store"></i>
+                <div>Penjualan</div>
+            </a>
+        </li>
+        @else
         <li class="menu-item {{ request()->is('penjualan', 'penjualan/*') ? 'active' : '' }}">
             <a href="{{ route('penjualan.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-store"></i>
                 <div>Penjualan</div>
             </a>
         </li>
+        @endif
 
         {{-- Pembelian hanya non kasir --}}
         @if(auth()->user()->role != 'kasir')
