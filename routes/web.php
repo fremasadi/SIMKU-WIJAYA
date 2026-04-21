@@ -11,6 +11,7 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\GajiController;
+use App\Http\Controllers\KeuanganController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -34,7 +35,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
     Route::get('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate');
+    Route::patch('/gaji/bayar-terpilih', [GajiController::class, 'markSelectedAsPaid'])->name('gaji.bayarTerpilih');
     Route::patch('/gaji/{gaji}/bayar', [GajiController::class, 'markAsPaid'])->name('gaji.bayar');
+
+    Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan.index');
+    Route::get('/keuangan/export-pdf', [KeuanganController::class, 'exportPdf'])->name('keuangan.exportPdf');
 });
 
 require __DIR__.'/auth.php';

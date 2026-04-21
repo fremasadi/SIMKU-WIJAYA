@@ -111,6 +111,21 @@
         @endif
 
 
+        {{-- ================= LAPORAN ================= --}}
+        @if(in_array(auth()->user()->role, ['admin', 'owner']))
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Laporan</span>
+        </li>
+
+        <li class="menu-item {{ request()->is('keuangan', 'keuangan/*') ? 'active' : '' }}">
+            <a href="{{ route('keuangan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-line-chart"></i>
+                <div>Laporan Keuangan</div>
+            </a>
+        </li>
+        @endif
+
+
         {{-- ================= ADMIN / OWNER ================= --}}
         @if(auth()->user()->role == 'owner')
         <li class="menu-header small text-uppercase">

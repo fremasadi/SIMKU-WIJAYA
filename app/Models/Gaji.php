@@ -32,4 +32,12 @@ class Gaji extends Model
     {
         return $this->belongsTo(Karyawan::class);
     }
+
+    /**
+     * Relasi ke rincian potongan gaji
+     */
+    public function potongans()
+    {
+        return $this->hasMany(GajiPotongan::class);
+    }
 }

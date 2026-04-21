@@ -17,9 +17,11 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h5 class="mb-0">Daftar Bahan Baku</h5>
+            @if(auth()->user()->role != 'owner')
             <a href="{{ route('bahan-baku.create') }}" class="btn btn-primary">
                 <i class="bx bx-plus me-1"></i> Tambah Bahan
             </a>
+            @endif
         </div>
 
         <div class="table-responsive text-nowrap">
