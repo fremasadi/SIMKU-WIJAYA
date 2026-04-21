@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $isOwner = auth()->user()->role == 'owner';
+@endphp
+
 <div class="container-xxl flex-grow-1 container-p-y">
 
     <!-- Header -->
@@ -48,8 +52,10 @@
         </div>
 
         <div class="table-responsive text-nowrap p-3">
+            @if(!$isOwner)
             <form action="{{ route('presensi.updateStatus') }}" method="POST">
                 @csrf
+            @endif
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -64,8 +70,16 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $p->karyawan->nama }}</td>
                             <td class="text-center">
+                                @if($isOwner)
+                                    @if($p->status_hadir == 'Hadir')
+                                        <span class="badge bg-label-success">Hadir</span>
+                                    @else
+                                        <span class="badge bg-label-danger">Tidak Hadir</span>
+                                    @endif
+                                @else
                                 <input type="checkbox" name="status_hadir[{{ $p->id }}]" value="Hadir"
                                     {{ $p->status_hadir == 'Hadir' ? 'checked' : '' }}>
+                                @endif
                             </td>
                         </tr>
                         @empty
@@ -75,10 +89,12 @@
                         @endforelse
                     </tbody>
                 </table>
-                @if($presensis->count())
+                @if(!$isOwner && $presensis->count())
                 <button type="submit" class="btn btn-success mt-2">Simpan Presensi</button>
                 @endif
+            @if(!$isOwner)
             </form>
+            @endif
         </div>
     </div>
 
