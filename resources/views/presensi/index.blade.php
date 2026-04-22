@@ -77,6 +77,7 @@
                                         <span class="badge bg-label-danger">Tidak Hadir</span>
                                     @endif
                                 @else
+                                <input type="hidden" name="presensi_ids[]" value="{{ $p->id }}">
                                 <input type="checkbox" name="status_hadir[{{ $p->id }}]" value="Hadir"
                                     {{ $p->status_hadir == 'Hadir' ? 'checked' : '' }}>
                                 @endif

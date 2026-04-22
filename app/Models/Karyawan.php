@@ -26,7 +26,7 @@ class Karyawan extends Model
      */
     public function presensis()
     {
-        return $this->hasMany(Presensi::class, 'id_karyawan');
+        return $this->hasMany(Presensi::class);
     }
 
     /**
@@ -34,6 +34,6 @@ class Karyawan extends Model
      */
     public function gajis()
     {
-        return $this->hasMany(Gaji::class, 'id_karyawan');
+        return $this->hasMany(Gaji::class);
     }
 }

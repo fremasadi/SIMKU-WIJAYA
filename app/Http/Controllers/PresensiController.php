@@ -16,18 +16,7 @@ class PresensiController extends Controller
         $date = $request->date ?? now()->toDateString();
         $karyawanId = $request->karyawan_id ?? null;
 
-        // Auto-generate presensi hari ini
-        $existing = Presensi::where('tanggal', $date)->count();
-        if ($existing == 0) {
-            $karyawans = Karyawan::all();
-            foreach ($karyawans as $k) {
-                Presensi::create([
-                    'tanggal' => $date,
-                    'karyawan_id' => $k->id,
-                    'status_hadir' => 'Tidak Hadir',
-                ]);
-            }
-        }
+        $this->ensurePresensiForDate($date);
 
         $query = Presensi::with('karyawan')->where('tanggal', $date);
         if ($karyawanId) {
@@ -37,6 +26,26 @@ class PresensiController extends Controller
 
         $karyawans = Karyawan::all();
         return view('presensi.index', compact('presensis', 'karyawans', 'date'));
+    }
+
+    /**
+     * Pastikan setiap karyawan yang sudah masuk punya data presensi di tanggal ini.
+     */
+    private function ensurePresensiForDate(string $date): void
+    {
+        $karyawans = Karyawan::whereDate('tanggal_masuk', '<=', $date)->get();
+
+        foreach ($karyawans as $karyawan) {
+            Presensi::firstOrCreate(
+                [
+                    'tanggal' => $date,
+                    'karyawan_id' => $karyawan->id,
+                ],
+                [
+                    'status_hadir' => 'Tidak Hadir',
+                ]
+            );
+        }
     }
 
     /**
@@ -109,22 +118,23 @@ class PresensiController extends Controller
     }
 
     /**
- * Update status presensi dari checklist
- */
-public function updateStatus(Request $request)
-{
-    $statuses = $request->input('status_hadir', []);
+     * Update status presensi dari checklist
+     */
+    public function updateStatus(Request $request)
+    {
+        $presensiIds = $request->input('presensi_ids', []);
+        $statuses = $request->input('status_hadir', []);
 
-    foreach ($statuses as $id => $status) {
-        $presensi = Presensi::find($id);
-        if ($presensi) {
-            $presensi->status_hadir = $status;
-            $presensi->save();
+        foreach ($presensiIds as $id) {
+            $presensi = Presensi::find($id);
+            if ($presensi) {
+                $presensi->status_hadir = $statuses[$id] ?? 'Tidak Hadir';
+                $presensi->save();
+            }
         }
-    }
 
-    return redirect()
-        ->back()
-        ->with('success', 'Presensi berhasil diperbarui');
-}
+        return redirect()
+            ->back()
+            ->with('success', 'Presensi berhasil diperbarui');
+    }
 }

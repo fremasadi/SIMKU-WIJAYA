@@ -14,7 +14,6 @@
             </div>
         @endif
 
-<<<<<<< HEAD
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Penjualan</h5>
@@ -80,23 +79,6 @@
                                             <i class="bx bx-trash me-1"></i> Hapus
                                         </button>
                                     </form>
-=======
-        @if(in_array(auth()->user()->role, ['owner', 'kasir']))
-            <div class="row mb-4">
-                <div class="col-md-6 col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <span class="text-muted d-block mb-1">Total Penjualan</span>
-                                    <h4 class="card-title mb-0">Rp {{ number_format($totalPenjualan, 2, ',', '.') }}</h4>
-                                    <small class="text-muted">Mengikuti filter tanggal yang dipilih</small>
-                                </div>
-                                <div class="avatar">
-                                    <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="bx bx-wallet"></i>
-                                    </span>
->>>>>>> 2b33986e18d049c3d15a27bf5ed9d82ce81b4bc7
                                 </div>
                             </div>
                         </div>
