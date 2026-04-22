@@ -7,6 +7,28 @@
         <span class="text-muted fw-light">Penjualan /</span> Daftar Penjualan
     </h4>
 
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <span class="avatar-initial rounded bg-label-primary">
+                                <i class="bx bx-cart"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block mb-1">Total Penjualan</small>
+                            <h4 class="mb-0">
+                                Rp {{ number_format($totalPenjualan ?? 0, 2, ',', '.') }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
