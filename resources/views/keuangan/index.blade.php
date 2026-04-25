@@ -23,8 +23,8 @@
                 @endfor
             </select>
             <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-            <a href="{{ route('keuangan.exportPdf', ['bulan' => $bulan, 'tahun' => $tahun]) }}" class="btn btn-sm btn-danger">
-                Export PDF
+            <a href="{{ route('keuangan.exportPdf', ['bulan' => $bulan, 'tahun' => $tahun]) }}" target="_blank" rel="noopener" class="btn btn-sm btn-danger">
+                Preview PDF
             </a>
         </form>
     </div>
@@ -212,6 +212,137 @@
                     <p class="text-muted mb-0 mt-2">
                         Pendapatan dikurangi beban pokok dan beban operasional pada periode ini.
                     </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="mb-2">Sumber Data Laporan</h5>
+            <p class="text-muted mb-0">
+                Pendapatan diambil dari transaksi penjualan berdasarkan <strong>tanggal penjualan</strong>, beban pokok diambil dari transaksi pembelian berdasarkan <strong>tanggal pembelian</strong>, dan beban gaji diambil dari data gaji berstatus <strong>Dibayar</strong> berdasarkan <strong>periode gaji</strong> yang masuk ke bulan {{ $namaBulan[$bulan] }} {{ $tahun }}.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Detail Pendapatan</h5>
+                        <small class="text-muted">Sumber: transaksi penjualan pada periode terpilih</small>
+                    </div>
+                    <span class="badge bg-label-success">{{ $totalTransaksiPenjualan }} transaksi</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sumber Data</th>
+                                <th>Tanggal</th>
+                                <th>User</th>
+                                <th class="text-end">Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($detailPenjualans as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->kode_penjualan }}</td>
+                                    <td>{{ $item->tanggal_penjualan->format('d-m-Y') }}</td>
+                                    <td>{{ $item->user->name ?? '-' }}</td>
+                                    <td class="text-end">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">Tidak ada detail pendapatan pada periode ini.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Detail Beban Pokok</h5>
+                        <small class="text-muted">Sumber: transaksi pembelian bahan baku pada periode terpilih</small>
+                    </div>
+                    <span class="badge bg-label-danger">{{ $totalTransaksiPembelian }} transaksi</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sumber Data</th>
+                                <th>Tanggal</th>
+                                <th>User</th>
+                                <th class="text-end">Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($detailPembelians as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>Pembelian #{{ $item->id }}</td>
+                                    <td>{{ $item->tanggal_pembelian->format('d-m-Y') }}</td>
+                                    <td>{{ $item->user->name ?? '-' }}</td>
+                                    <td class="text-end">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">Tidak ada detail beban pokok pada periode ini.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Detail Beban Gaji</h5>
+                        <small class="text-muted">Sumber: gaji berstatus dibayar yang periodenya masuk bulan terpilih</small>
+                    </div>
+                    <span class="badge bg-label-warning">{{ $totalGajiDibayar }} pembayaran</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Karyawan</th>
+                                <th>Periode</th>
+                                <th>Tanggal Bayar</th>
+                                <th class="text-end">Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($detailGajis as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->karyawan->nama ?? '-' }}</td>
+                                    <td>{{ $item->periode_awal->format('d-m-Y') }} s/d {{ $item->periode_akhir->format('d-m-Y') }}</td>
+                                    <td>{{ optional($item->tanggal_bayar)->format('d-m-Y') ?? '-' }}</td>
+                                    <td class="text-end">Rp {{ number_format($item->jumlah_gaji, 0, ',', '.') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">Tidak ada detail beban gaji pada periode ini.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

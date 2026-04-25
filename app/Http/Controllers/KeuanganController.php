@@ -25,7 +25,7 @@ class KeuanganController extends Controller
         $pdf = Pdf::loadView('keuangan.pdf', $data)
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 
     private function getReportData(Request $request): array
@@ -41,15 +41,20 @@ class KeuanganController extends Controller
             $bulan = now()->month;
         }
 
-        $pendapatan = Penjualan::whereMonth('tanggal_penjualan', $bulan)
+        $penjualanQuery = Penjualan::with('user')
+            ->whereMonth('tanggal_penjualan', $bulan)
             ->whereYear('tanggal_penjualan', $tahun)
-            ->sum('total');
+            ->orderBy('tanggal_penjualan')
+            ->orderBy('id');
 
-        $bebanPokok = Pembelian::whereMonth('tanggal_pembelian', $bulan)
+        $pembelianQuery = Pembelian::with('user')
+            ->whereMonth('tanggal_pembelian', $bulan)
             ->whereYear('tanggal_pembelian', $tahun)
-            ->sum('total');
+            ->orderBy('tanggal_pembelian')
+            ->orderBy('id');
 
-        $bebanGaji = Gaji::where(function ($query) use ($bulan, $tahun) {
+        $gajiQuery = Gaji::with('karyawan')
+            ->where(function ($query) use ($bulan, $tahun) {
                 $query->where(function ($periode) use ($bulan, $tahun) {
                     $periode->whereMonth('periode_awal', $bulan)
                         ->whereYear('periode_awal', $tahun);
@@ -60,33 +65,25 @@ class KeuanganController extends Controller
                 });
             })
             ->where('status', 'Dibayar')
-            ->sum('jumlah_gaji');
+            ->orderBy('tanggal_bayar')
+            ->orderBy('id');
+
+        $detailPenjualans = $penjualanQuery->get();
+        $detailPembelians = $pembelianQuery->get();
+        $detailGajis = $gajiQuery->get();
+
+        $pendapatan = $detailPenjualans->sum('total');
+        $bebanPokok = $detailPembelians->sum('total');
+        $bebanGaji = $detailGajis->sum('jumlah_gaji');
 
         $totalBeban = $bebanPokok + $bebanGaji;
         $labaKotor = $pendapatan - $bebanPokok;
         $labaBersih = $pendapatan - $totalBeban;
         $marginBersih = $pendapatan > 0 ? ($labaBersih / $pendapatan) * 100 : 0;
 
-        $totalTransaksiPenjualan = Penjualan::whereMonth('tanggal_penjualan', $bulan)
-            ->whereYear('tanggal_penjualan', $tahun)
-            ->count();
-
-        $totalTransaksiPembelian = Pembelian::whereMonth('tanggal_pembelian', $bulan)
-            ->whereYear('tanggal_pembelian', $tahun)
-            ->count();
-
-        $totalGajiDibayar = Gaji::where(function ($query) use ($bulan, $tahun) {
-                $query->where(function ($periode) use ($bulan, $tahun) {
-                    $periode->whereMonth('periode_awal', $bulan)
-                        ->whereYear('periode_awal', $tahun);
-                })
-                ->orWhere(function ($periode) use ($bulan, $tahun) {
-                    $periode->whereMonth('periode_akhir', $bulan)
-                        ->whereYear('periode_akhir', $tahun);
-                });
-            })
-            ->where('status', 'Dibayar')
-            ->count();
+        $totalTransaksiPenjualan = $detailPenjualans->count();
+        $totalTransaksiPembelian = $detailPembelians->count();
+        $totalGajiDibayar = $detailGajis->count();
 
         $namaBulan = [
             1 => 'Januari',
@@ -116,7 +113,10 @@ class KeuanganController extends Controller
             'marginBersih',
             'totalTransaksiPenjualan',
             'totalTransaksiPembelian',
-            'totalGajiDibayar'
+            'totalGajiDibayar',
+            'detailPenjualans',
+            'detailPembelians',
+            'detailGajis'
         );
     }
 }

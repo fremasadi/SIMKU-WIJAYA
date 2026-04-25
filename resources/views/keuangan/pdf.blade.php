@@ -97,12 +97,47 @@
             font-size: 10px;
             text-align: right;
         }
+
+        .note {
+            margin-bottom: 18px;
+            padding: 10px 12px;
+            background: #f8f9fb;
+            border: 1px solid #e5e7eb;
+        }
+
+        .detail-title {
+            margin: 22px 0 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            font-size: 11px;
+        }
+
+        .detail-table th {
+            background: #f5f5f5;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Laporan Keuangan</h1>
         <p>Periode {{ $namaBulan[$bulan] }} {{ $tahun }}</p>
+    </div>
+
+    <div class="note">
+        Pendapatan diambil dari transaksi penjualan berdasarkan tanggal penjualan, beban pokok diambil dari transaksi pembelian berdasarkan tanggal pembelian, dan beban gaji diambil dari data gaji berstatus Dibayar berdasarkan periode gaji yang masuk ke bulan {{ $namaBulan[$bulan] }} {{ $tahun }}.
     </div>
 
     <table class="summary">
@@ -186,6 +221,90 @@
                     Rp {{ number_format($labaBersih, 0, ',', '.') }}
                 </td>
             </tr>
+        </tbody>
+    </table>
+
+    <div class="detail-title">Detail Pendapatan</div>
+    <table class="detail-table">
+        <thead>
+            <tr>
+                <th style="width: 7%;">#</th>
+                <th style="width: 28%;">Sumber Data</th>
+                <th style="width: 20%;">Tanggal</th>
+                <th style="width: 25%;">User</th>
+                <th class="right" style="width: 20%;">Nominal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($detailPenjualans as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->kode_penjualan }}</td>
+                    <td>{{ $item->tanggal_penjualan->format('d-m-Y') }}</td>
+                    <td>{{ $item->user->name ?? '-' }}</td>
+                    <td class="right">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #666;">Tidak ada detail pendapatan pada periode ini.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <div class="detail-title">Detail Beban Pokok</div>
+    <table class="detail-table">
+        <thead>
+            <tr>
+                <th style="width: 7%;">#</th>
+                <th style="width: 28%;">Sumber Data</th>
+                <th style="width: 20%;">Tanggal</th>
+                <th style="width: 25%;">User</th>
+                <th class="right" style="width: 20%;">Nominal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($detailPembelians as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>Pembelian #{{ $item->id }}</td>
+                    <td>{{ $item->tanggal_pembelian->format('d-m-Y') }}</td>
+                    <td>{{ $item->user->name ?? '-' }}</td>
+                    <td class="right">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #666;">Tidak ada detail beban pokok pada periode ini.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <div class="detail-title">Detail Beban Gaji</div>
+    <table class="detail-table">
+        <thead>
+            <tr>
+                <th style="width: 7%;">#</th>
+                <th style="width: 25%;">Karyawan</th>
+                <th style="width: 30%;">Periode</th>
+                <th style="width: 18%;">Tanggal Bayar</th>
+                <th class="right" style="width: 20%;">Nominal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($detailGajis as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->karyawan->nama ?? '-' }}</td>
+                    <td>{{ $item->periode_awal->format('d-m-Y') }} s/d {{ $item->periode_akhir->format('d-m-Y') }}</td>
+                    <td>{{ optional($item->tanggal_bayar)->format('d-m-Y') ?? '-' }}</td>
+                    <td class="right">Rp {{ number_format($item->jumlah_gaji, 0, ',', '.') }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #666;">Tidak ada detail beban gaji pada periode ini.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 
