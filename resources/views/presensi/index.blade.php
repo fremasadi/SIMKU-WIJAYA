@@ -2,7 +2,10 @@
 
 @section('content')
 @php
-    $isOwner = auth()->user()->role == 'owner';
+    $role = auth()->user()->role;
+    $isOwner = $role == 'owner';
+    $isAdmin = $role == 'admin';
+    $isEditMode = $isAdmin && request()->boolean('edit');
 @endphp
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -49,12 +52,27 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Presensi Tanggal: {{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</h5>
+            @if($isAdmin)
+                <div class="d-flex gap-2">
+                    @if($isEditMode)
+                        <a href="{{ route('presensi.index', array_filter(['date' => request('date', $date), 'karyawan_id' => request('karyawan_id')])) }}" class="btn btn-secondary btn-sm">
+                            Batal
+                        </a>
+                    @else
+                        <a href="{{ route('presensi.index', array_filter(['date' => request('date', $date), 'karyawan_id' => request('karyawan_id'), 'edit' => 1])) }}" class="btn btn-warning btn-sm">
+                            Edit Presensi
+                        </a>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div class="table-responsive text-nowrap p-3">
-            @if(!$isOwner)
+            @if($isEditMode)
             <form action="{{ route('presensi.updateStatus') }}" method="POST">
                 @csrf
+                <input type="hidden" name="date" value="{{ request('date', $date) }}">
+                <input type="hidden" name="karyawan_id" value="{{ request('karyawan_id') }}">
             @endif
                 <table class="table table-bordered">
                     <thead>
@@ -70,7 +88,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $p->karyawan->nama }}</td>
                             <td class="text-center">
-                                @if($isOwner)
+                                @if(!$isEditMode)
                                     @if($p->status_hadir == 'Hadir')
                                         <span class="badge bg-label-success">Hadir</span>
                                     @else
@@ -90,10 +108,10 @@
                         @endforelse
                     </tbody>
                 </table>
-                @if(!$isOwner && $presensis->count())
+                @if($isEditMode && $presensis->count())
                 <button type="submit" class="btn btn-success mt-2">Simpan Presensi</button>
                 @endif
-            @if(!$isOwner)
+            @if($isEditMode)
             </form>
             @endif
         </div>

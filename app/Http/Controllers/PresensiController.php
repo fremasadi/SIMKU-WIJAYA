@@ -122,6 +122,10 @@ class PresensiController extends Controller
      */
     public function updateStatus(Request $request)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
         $presensiIds = $request->input('presensi_ids', []);
         $statuses = $request->input('status_hadir', []);
 
@@ -134,7 +138,10 @@ class PresensiController extends Controller
         }
 
         return redirect()
-            ->back()
+            ->route('presensi.index', array_filter([
+                'date' => $request->input('date'),
+                'karyawan_id' => $request->input('karyawan_id'),
+            ]))
             ->with('success', 'Presensi berhasil diperbarui');
     }
 }
