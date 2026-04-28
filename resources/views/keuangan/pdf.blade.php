@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Laporan Keuangan</title>
@@ -90,12 +91,15 @@
         }
     </style>
 </head>
+
 <body>
     <div class="title">
-        <h1>Laporan Keuangan Simpro</h1>
+        <h1>Laporan Keuangan </h1>
     </div>
 
-    <p class="period"><strong>Periode:</strong> {{ $periodeMulai->format('d/m/Y') }} - {{ $periodeSelesai->format('d/m/Y') }}</p>
+    <p class="period"><strong>Periode:</strong> {{ $periodeMulai->format('d/m/Y') }} -
+        {{ $periodeSelesai->format('d/m/Y') }}
+    </p>
 
     <table class="report-table">
         <thead>
@@ -149,4 +153,5 @@
         </div>
     </div>
 </body>
+
 </html>

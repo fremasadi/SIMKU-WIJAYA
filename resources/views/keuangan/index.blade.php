@@ -31,83 +31,83 @@
         </div>
 
         <!-- <div class="row mb-4">
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <p class="card-text mb-1">Pendapatan</p>
-                                        <h4 class="mb-1 text-success">Rp {{ number_format($pendapatan, 0, ',', '.') }}</h4>
-                                        <small class="text-muted">{{ $totalTransaksiPenjualan }} transaksi penjualan</small>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="card-text mb-1">Pendapatan</p>
+                                                <h4 class="mb-1 text-success">Rp {{ number_format($pendapatan, 0, ',', '.') }}</h4>
+                                                <small class="text-muted">{{ $totalTransaksiPenjualan }} transaksi penjualan</small>
+                                            </div>
+                                            <span class="badge bg-label-success rounded p-2">
+                                                <i class="bx bx-trending-up bx-sm"></i>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span class="badge bg-label-success rounded p-2">
-                                        <i class="bx bx-trending-up bx-sm"></i>
-                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <p class="card-text mb-1">Beban Pokok</p>
-                                        <h4 class="mb-1 text-danger">Rp {{ number_format($bebanPokok, 0, ',', '.') }}</h4>
-                                        <small class="text-muted">{{ $totalTransaksiPembelian }} transaksi pembelian</small>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="card-text mb-1">Beban Pokok</p>
+                                                <h4 class="mb-1 text-danger">Rp {{ number_format($bebanPokok, 0, ',', '.') }}</h4>
+                                                <small class="text-muted">{{ $totalTransaksiPembelian }} transaksi pembelian</small>
+                                            </div>
+                                            <span class="badge bg-label-danger rounded p-2">
+                                                <i class="bx bx-shopping-bag bx-sm"></i>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span class="badge bg-label-danger rounded p-2">
-                                        <i class="bx bx-shopping-bag bx-sm"></i>
-                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <p class="card-text mb-1">Beban Gaji</p>
-                                        <h4 class="mb-1 text-danger">Rp {{ number_format($bebanGaji, 0, ',', '.') }}</h4>
-                                        <small class="text-muted">{{ $totalGajiDibayar }} gaji dibayar</small>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="card-text mb-1">Beban Gaji</p>
+                                                <h4 class="mb-1 text-danger">Rp {{ number_format($bebanGaji, 0, ',', '.') }}</h4>
+                                                <small class="text-muted">{{ $totalGajiDibayar }} gaji dibayar</small>
+                                            </div>
+                                            <span class="badge bg-label-warning rounded p-2">
+                                                <i class="bx bx-wallet bx-sm"></i>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span class="badge bg-label-warning rounded p-2">
-                                        <i class="bx bx-wallet bx-sm"></i>
-                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card h-100 border-{{ $labaBersih >= 0 ? 'success' : 'danger' }}">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <p class="card-text mb-1">Laba Bersih</p>
-                                        <h4 class="mb-1 {{ $labaBersih >= 0 ? 'text-success' : 'text-danger' }}">
-                                            Rp {{ number_format($labaBersih, 0, ',', '.') }}
-                                        </h4>
-                                        <small class="text-muted">Margin {{ number_format($marginBersih, 2) }}%</small>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card h-100 border-{{ $labaBersih >= 0 ? 'success' : 'danger' }}">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="card-text mb-1">Laba Bersih</p>
+                                                <h4 class="mb-1 {{ $labaBersih >= 0 ? 'text-success' : 'text-danger' }}">
+                                                    Rp {{ number_format($labaBersih, 0, ',', '.') }}
+                                                </h4>
+                                                <small class="text-muted">Margin {{ number_format($marginBersih, 2) }}%</small>
+                                            </div>
+                                            <span class="badge bg-label-{{ $labaBersih >= 0 ? 'success' : 'danger' }} rounded p-2">
+                                                <i class="bx bx-dollar-circle bx-sm"></i>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span class="badge bg-label-{{ $labaBersih >= 0 ? 'success' : 'danger' }} rounded p-2">
-                                        <i class="bx bx-dollar-circle bx-sm"></i>
-                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div> -->
-    
+                        </div> -->
+
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="mb-1">Laporan Keuangan Simpro</h5>
+                            <h5 class="mb-1">Laporan Keuangan</h5>
                             <small class="text-muted">
                                 Periode: {{ $periodeMulai->format('d/m/Y') }} - {{ $periodeSelesai->format('d/m/Y') }}
                             </small>
