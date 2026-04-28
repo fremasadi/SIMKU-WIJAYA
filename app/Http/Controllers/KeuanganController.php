@@ -6,6 +6,7 @@ use App\Models\Gaji;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class KeuanganController extends Controller
@@ -85,6 +86,58 @@ class KeuanganController extends Controller
         $totalTransaksiPembelian = $detailPembelians->count();
         $totalGajiDibayar = $detailGajis->count();
 
+        $transaksiKeuangan = collect()
+            ->merge($detailPenjualans->map(function ($item) {
+                return [
+                    'tanggal' => $item->tanggal_penjualan,
+                    'keterangan' => $item->kode_penjualan ? 'Penjualan ' . $item->kode_penjualan : 'Penjualan Produk',
+                    'pemasukan' => (float) $item->total,
+                    'pengeluaran' => 0,
+                    'urutan' => 1,
+                    'id' => $item->id,
+                ];
+            }))
+            ->merge($detailPembelians->map(function ($item) {
+                return [
+                    'tanggal' => $item->tanggal_pembelian,
+                    'keterangan' => 'Pembelian Bahan Baku #' . $item->id,
+                    'pemasukan' => 0,
+                    'pengeluaran' => (float) $item->total,
+                    'urutan' => 2,
+                    'id' => $item->id,
+                ];
+            }))
+            ->merge($detailGajis->map(function ($item) {
+                return [
+                    'tanggal' => $item->tanggal_bayar ?? $item->periode_akhir,
+                    'keterangan' => 'Pembayaran Gaji - ' . ($item->karyawan->nama ?? 'Karyawan'),
+                    'pemasukan' => 0,
+                    'pengeluaran' => (float) $item->jumlah_gaji,
+                    'urutan' => 3,
+                    'id' => $item->id,
+                ];
+            }))
+            ->sortBy([
+                ['tanggal', 'asc'],
+                ['urutan', 'asc'],
+                ['id', 'asc'],
+            ])
+            ->values();
+
+        $saldoBerjalan = 0;
+        $transaksiKeuangan = $transaksiKeuangan->map(function ($item) use (&$saldoBerjalan) {
+            $saldoBerjalan += $item['pemasukan'] - $item['pengeluaran'];
+            $item['saldo'] = $saldoBerjalan;
+
+            return $item;
+        });
+
+        $periodeMulai = Carbon::create($tahun, $bulan, 1)->startOfMonth();
+        $periodeSelesai = ($bulan === (int) now()->month && $tahun === (int) now()->year)
+            ? now()
+            : Carbon::create($tahun, $bulan, 1)->endOfMonth();
+        $kondisiKeuangan = $labaBersih >= 0 ? 'POSITIF' : 'NEGATIF';
+
         $namaBulan = [
             1 => 'Januari',
             2 => 'Februari',
@@ -114,6 +167,10 @@ class KeuanganController extends Controller
             'totalTransaksiPenjualan',
             'totalTransaksiPembelian',
             'totalGajiDibayar',
+            'transaksiKeuangan',
+            'periodeMulai',
+            'periodeSelesai',
+            'kondisiKeuangan',
             'detailPenjualans',
             'detailPembelians',
             'detailGajis'
