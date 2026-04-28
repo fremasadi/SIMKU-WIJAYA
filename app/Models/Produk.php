@@ -13,11 +13,13 @@ class Produk extends Model
 
     protected $fillable = [
         'nama_produk',
+        'harga',
         'stok',
         'satuan',
     ];
 
     protected $casts = [
+        'harga' => 'decimal:2',
         'stok' => 'integer',
     ];
 

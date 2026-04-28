@@ -30,6 +30,7 @@
                     <tr>
                         <th>#</th>
                         <th>Nama Produk</th>
+                        <th>Harga</th>
                         <th>Stok</th>
                         <th>Satuan</th>
                         <th>Aksi</th>
@@ -40,6 +41,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>{{ $p->nama_produk }}</strong></td>
+                        <td>Rp {{ number_format($p->harga ?? 0, 2, ',', '.') }}</td>
                         <td>{{ $p->stok }}</td>
                         <td>{{ $p->satuan }}</td>
                         <td>
@@ -65,7 +67,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
+                        <td colspan="6" class="text-center text-muted py-4">
                             Tidak ada data produk
                         </td>
                     </tr>

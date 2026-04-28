@@ -5,6 +5,12 @@
 </div>
 
 <div class="mb-3">
+    <label class="form-label">Harga</label>
+    <input type="number" name="harga" class="form-control"
+        value="{{ old('harga', $produk->harga ?? 0) }}" min="0" step="0.01" required>
+</div>
+
+<div class="mb-3">
     <label class="form-label">Satuan</label>
     <select name="satuan" class="form-select" required>
         <option value="">-- Pilih Satuan --</option>
@@ -25,7 +31,7 @@
 <div class="mb-3">
     <label class="form-label">Stok</label>
     <input type="number" name="stok" class="form-control"
-        value="{{ old('stok', $produk->stok ?? 0) }}" min="0" required>
+        value="{{ old('stok', $produk->stok ?? 0) }}" min="0" step="0.01" required>
 </div>
 
 <button class="btn btn-success">{{ $button }}</button>

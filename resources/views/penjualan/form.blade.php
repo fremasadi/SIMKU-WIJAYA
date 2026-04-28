@@ -14,7 +14,6 @@
                 <th>Produk</th>
                 <th>Jumlah</th>
                 <th>Harga</th>
-                <th>Subtotal</th>
                 <th>
                     <button type="button" class="btn btn-success btn-sm" id="addRow">
                         <i class="bx bx-plus"></i>
@@ -28,13 +27,15 @@
                     <select name="produk_id[]" class="form-control" required>
                         <option value="">-- Pilih Produk --</option>
                         @foreach($produks as $produk)
-                        <option value="{{ $produk->id }}" data-stok="{{ $produk->stok }}">{{ $produk->nama_produk }} (Stok: {{ $produk->stok }})</option>
+                        <option value="{{ $produk->id }}" data-stok="{{ $produk->stok }}" data-harga="{{ $produk->harga ?? 0 }}">{{ $produk->nama_produk }} (Stok: {{ $produk->stok }})</option>
                         @endforeach
                     </select>
                 </td>
                 <td><input type="number" name="jumlah[]" class="form-control jumlah" step="0.01" required></td>
-                <td><input type="number" name="harga[]" class="form-control harga" step="0.01" required></td>
-                <td><input type="text" class="form-control subtotal" readonly></td>
+                <td>
+                    <input type="hidden" name="harga[]" class="harga" required>
+                    <input type="number" class="form-control harga-display" step="0.01" disabled>
+                </td>
                 <td><button type="button" class="btn btn-danger btn-sm removeRow"><i class="bx bx-trash"></i></button></td>
             </tr>
         </tbody>
@@ -47,10 +48,12 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function updateSubtotal(row){
-    const jumlah = parseFloat(row.find('.jumlah').val()) || 0;
-    const harga = parseFloat(row.find('.harga').val()) || 0;
-    row.find('.subtotal').val((jumlah * harga).toFixed(2));
+function syncHarga(row) {
+    const selectedOption = row.find('select[name="produk_id[]"] option:selected');
+    const harga = parseFloat(selectedOption.data('harga')) || 0;
+
+    row.find('.harga').val(harga.toFixed(2));
+    row.find('.harga-display').val(harga.toFixed(2));
 }
 
 $(document).ready(function(){
@@ -64,11 +67,6 @@ $(document).ready(function(){
         if($('#detailTable tbody tr').length > 1){
             $(this).closest('tr').remove();
         }
-    });
-
-    $('#detailTable').on('input', '.jumlah, .harga', function(){
-        const row = $(this).closest('tr');
-        updateSubtotal(row);
     });
 
     // Validasi stok saat input jumlah diubah
@@ -91,8 +89,6 @@ $(document).ready(function(){
             });
             $(this).val(stok); // Set ke maksimum stok
         }
-
-        updateSubtotal(tr);
     });
 
     // Validasi stok saat pilihan produk diubah (jika jumlah sudah terisi)
@@ -116,7 +112,11 @@ $(document).ready(function(){
             jumlahInput.val(stok);
         }
 
-        updateSubtotal(tr);
+        syncHarga(tr);
+    });
+
+    $('#detailTable tbody tr').each(function(){
+        syncHarga($(this));
     });
 });
 </script>
