@@ -14,6 +14,7 @@
                 <th>Produk</th>
                 <th>Jumlah</th>
                 <th>Harga</th>
+                <th>Subtotal</th>
                 <th>
                     <button type="button" class="btn btn-success btn-sm" id="addRow">
                         <i class="bx bx-plus"></i>
@@ -31,8 +32,9 @@
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="jumlah[]" class="form-control" step="0.01" required></td>
-                <td><input type="number" name="harga[]" class="form-control" step="0.01" required></td>
+                <td><input type="number" name="jumlah[]" class="form-control jumlah" step="0.01" required></td>
+                <td><input type="number" name="harga[]" class="form-control harga" step="0.01" required></td>
+                <td><input type="text" class="form-control subtotal" readonly></td>
                 <td><button type="button" class="btn btn-danger btn-sm removeRow"><i class="bx bx-trash"></i></button></td>
             </tr>
         </tbody>
@@ -45,6 +47,12 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+function updateSubtotal(row){
+    const jumlah = parseFloat(row.find('.jumlah').val()) || 0;
+    const harga = parseFloat(row.find('.harga').val()) || 0;
+    row.find('.subtotal').val((jumlah * harga).toFixed(2));
+}
+
 $(document).ready(function(){
     $('#addRow').click(function(){
         const newRow = $('#detailTable tbody tr:first').clone();
@@ -56,6 +64,11 @@ $(document).ready(function(){
         if($('#detailTable tbody tr').length > 1){
             $(this).closest('tr').remove();
         }
+    });
+
+    $('#detailTable').on('input', '.jumlah, .harga', function(){
+        const row = $(this).closest('tr');
+        updateSubtotal(row);
     });
 
     // Validasi stok saat input jumlah diubah
@@ -78,6 +91,8 @@ $(document).ready(function(){
             });
             $(this).val(stok); // Set ke maksimum stok
         }
+
+        updateSubtotal(tr);
     });
 
     // Validasi stok saat pilihan produk diubah (jika jumlah sudah terisi)
@@ -100,6 +115,8 @@ $(document).ready(function(){
             });
             jumlahInput.val(stok);
         }
+
+        updateSubtotal(tr);
     });
 });
 </script>
