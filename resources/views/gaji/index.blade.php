@@ -14,11 +14,13 @@
     </div>
     @endif
 
+    @if(auth()->user()->role == 'admin')
     <div class="mb-3">
         <a href="{{ route('gaji.generate') }}" class="btn btn-primary">
             Generate Gaji Otomatis
         </a>
     </div>
+    @endif
     <form method="GET" class="mb-3 row g-2 align-items-center">
     <div class="col-auto">
         <input type="date" name="start" class="form-control" value="{{ $start->format('Y-m-d') }}">
