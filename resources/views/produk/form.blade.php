@@ -28,11 +28,11 @@
     </select>
 </div>
 
-<div class="mb-3">
+{{-- <div class="mb-3">
     <label class="form-label">Stok</label>
     <input type="number" name="stok" class="form-control"
         value="{{ old('stok', $produk->stok ?? 0) }}" min="0" step="0.01" required>
-</div>
+</div> --}}
 
 <button class="btn btn-success">{{ $button }}</button>
 <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
