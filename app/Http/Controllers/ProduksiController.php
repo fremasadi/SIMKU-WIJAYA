@@ -8,6 +8,7 @@ use App\Models\Produk;
 use App\Models\BahanBaku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ProduksiController extends Controller
 {
@@ -39,11 +40,47 @@ class ProduksiController extends Controller
             'produk_id' => 'required|exists:produks,id',
             'tanggal_produksi' => 'required|date',
             'jumlah_produksi' => 'required|numeric|min:0.01',
+            'bahan_baku_id' => 'required|array|min:1',
             'bahan_baku_id.*' => 'required|exists:bahan_bakus,id',
+            'jumlah_bahan' => 'required|array|min:1',
             'jumlah_bahan.*' => 'required|numeric|min:0.01',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $bahanIds = collect($request->bahan_baku_id)->filter()->unique()->values();
+        $pemakaianPerBahan = [];
+        $barisPerBahan = [];
+
+        foreach ($request->bahan_baku_id as $index => $bahanId) {
+            $jumlahBahan = (float) ($request->jumlah_bahan[$index] ?? 0);
+
+            $pemakaianPerBahan[$bahanId] = ($pemakaianPerBahan[$bahanId] ?? 0) + $jumlahBahan;
+            $barisPerBahan[$bahanId][] = $index;
+        }
+
+        DB::transaction(function () use ($request, $bahanIds, $pemakaianPerBahan, $barisPerBahan) {
+            $stokBahan = BahanBaku::whereIn('id', $bahanIds)->lockForUpdate()->get()->keyBy('id');
+            $errors = [];
+
+            foreach ($pemakaianPerBahan as $bahanId => $totalPemakaian) {
+                $bahan = $stokBahan->get($bahanId);
+
+                if (!$bahan) {
+                    continue;
+                }
+
+                if ($totalPemakaian > (float) $bahan->stok) {
+                    $message = "Pemakaian {$bahan->nama_bahan} melebihi stok tersedia ({$bahan->stok} {$bahan->satuan}).";
+
+                    foreach ($barisPerBahan[$bahanId] as $rowIndex) {
+                        $errors["jumlah_bahan.$rowIndex"] = $message;
+                    }
+                }
+            }
+
+            if (!empty($errors)) {
+                throw ValidationException::withMessages($errors);
+            }
+
             // 1️⃣ Simpan header produksi
             $produksi = Produksi::create([
                 'produk_id' => $request->produk_id,
@@ -62,7 +99,7 @@ class ProduksiController extends Controller
                 ]);
 
                 // Kurangi stok bahan baku
-                $bahan = BahanBaku::findOrFail($bahanId);
+                $bahan = $stokBahan->get($bahanId);
                 $bahan->decrement('stok', $jumlahBahan);
             }
 
