@@ -33,14 +33,14 @@ class ProdukController extends Controller
             'nama_produk' => 'required|string|max:255',
             'harga'       => 'required|numeric|min:0',
             'satuan'      => 'required|string|max:20',
-            'stok'        => 'required|numeric|min:0',
+            'stok'        => 'nullable|numeric|min:0',
         ]);
 
         Produk::create([
             'nama_produk' => $request->nama_produk,
             'harga'       => $request->harga ?? 0,
             'satuan'      => $request->satuan,
-            'stok'        => $request->stok ?? 0, // stok awal
+            'stok'        => $request->input('stok', 0),
         ]);
 
         return redirect()
@@ -66,11 +66,16 @@ class ProdukController extends Controller
             'nama_produk' => 'required|string|max:255',
             'harga'       => 'required|numeric|min:0',
             'satuan'      => 'required|string|max:20',
-            'stok'        => 'required|numeric|min:0',
+            'stok'        => 'nullable|numeric|min:0',
         ]);
 
         $produk = Produk::findOrFail($id);
-        $produk->update($request->only('nama_produk', 'harga', 'satuan', 'stok'));
+        $produk->update([
+            'nama_produk' => $request->nama_produk,
+            'harga'       => $request->harga,
+            'satuan'      => $request->satuan,
+            'stok'        => $request->input('stok', $produk->stok),
+        ]);
 
         return redirect()
             ->route('produk.index')

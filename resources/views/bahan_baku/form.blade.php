@@ -6,8 +6,18 @@
 
 <div class="mb-3">
     <label class="form-label">Satuan</label>
-    <input type="text" name="satuan" class="form-control"
-        value="{{ old('satuan', $bahanBaku->satuan ?? '') }}" required>
+    @php
+        $satuans = ['kg', 'gram', 'liter', 'ml', 'pcs', 'pack'];
+        $selectedSatuan = old('satuan', $bahanBaku->satuan ?? '');
+    @endphp
+    <select name="satuan" class="form-control" required>
+        <option value="">-- Pilih Satuan --</option>
+        @foreach($satuans as $satuan)
+            <option value="{{ $satuan }}" {{ $selectedSatuan === $satuan ? 'selected' : '' }}>
+                {{ strtoupper($satuan) }}
+            </option>
+        @endforeach
+    </select>
 </div>
 
 <div class="mb-3">
