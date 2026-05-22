@@ -33,7 +33,7 @@
                     </select>
                 </td>
                 <td><input type="number" name="jumlah[]" class="form-control jumlah" step="0.01" required></td>
-                <td><input type="number" name="harga[]" class="form-control harga" step="0.01" required></td>
+                <td><input type="text" inputmode="numeric" name="harga[]" class="form-control harga rupiah-input" required></td>
                 <td><input type="text" class="form-control subtotal" readonly></td>
                 <td><button type="button" class="btn btn-danger btn-sm removeRow"><i class="bx bx-trash"></i></button></td>
             </tr>
@@ -48,8 +48,8 @@
 <script>
     function updateSubtotal(row){
         const jumlah = parseFloat(row.find('.jumlah').val()) || 0;
-        const harga = parseFloat(row.find('.harga').val()) || 0;
-        row.find('.subtotal').val((jumlah * harga).toFixed(2));
+        const harga = parseFloat(row.find('.harga').val().replace(/\./g, '')) || 0;
+        row.find('.subtotal').val((jumlah * harga).toLocaleString('id-ID'));
     }
 
     $(document).ready(function(){

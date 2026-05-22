@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class BahanBaku extends Model
 {
     use HasFactory;
+
+    public const BATAS_STOK_MENIPIS = 50;
 
     protected $table = 'bahan_bakus';
 
@@ -19,9 +22,22 @@ class BahanBaku extends Model
     ];
 
     protected $casts = [
-        'stok' => 'integer',
+        'stok' => 'decimal:2',
         'harga_satuan' => 'decimal:2',
     ];
+
+    /**
+     * Scope bahan baku dengan stok menipis.
+     */
+    public function scopeStokMenipis(Builder $query): Builder
+    {
+        return $query->where('stok', '<=', self::BATAS_STOK_MENIPIS);
+    }
+
+    public function getStokMenipisAttribute(): bool
+    {
+        return (float) $this->stok <= self::BATAS_STOK_MENIPIS;
+    }
 
     /**
      * Relasi ke Detail Pembelian

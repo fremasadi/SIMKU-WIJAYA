@@ -38,7 +38,7 @@
                 <tbody class="table-border-bottom-0">
                     @forelse($users as $u)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $users->firstItem() + $loop->index }}</td>
                         <td><strong>{{ $u->name }}</strong></td>
                         <td>{{ $u->email }}</td>
                         <td>
@@ -77,11 +77,9 @@
     </div>
 
     <!-- Pagination -->
-    @if(method_exists($users, 'links'))
     <div class="mt-3">
         {{ $users->links() }}
     </div>
-    @endif
 
 </div>
 @endsection

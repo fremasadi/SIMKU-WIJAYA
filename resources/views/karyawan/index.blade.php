@@ -39,7 +39,7 @@
                 <tbody class="table-border-bottom-0">
                     @forelse($karyawans as $k)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $karyawans->firstItem() + $loop->index }}</td>
                         <td><strong>{{ $k->nama }}</strong></td>
                         <td>{{ $k->jabatan }}</td>
                         <td>{{ $k->no_hp }}</td>
@@ -74,6 +74,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="mt-3">
+        {{ $karyawans->links() }}
     </div>
 
 </div>

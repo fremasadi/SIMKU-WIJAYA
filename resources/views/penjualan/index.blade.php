@@ -80,7 +80,7 @@
                 <tbody>
                     @forelse($penjualans as $p)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $penjualans->firstItem() + $loop->index }}</td>
                             <td>{{ $p->kode_penjualan }}</td>
                             <td>{{ $p->tanggal_penjualan->format('d-m-Y') }}</td>
                             <td>{{ $p->user->name }}</td>
@@ -115,6 +115,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="mt-3">
+        {{ $penjualans->links() }}
     </div>
 
 </div>

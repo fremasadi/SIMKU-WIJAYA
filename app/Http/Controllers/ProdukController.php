@@ -12,7 +12,7 @@ class ProdukController extends Controller
      */
     public function index()
     {
-        $produks = Produk::latest()->get();
+        $produks = Produk::latest()->paginate(10)->withQueryString();
         return view('produk.index', compact('produks'));
     }
 

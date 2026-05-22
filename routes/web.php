@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/presensi', [PresensiController::class, 'index'])->name('presensi.index');
     Route::post('/presensi/update-status', [PresensiController::class, 'updateStatus'])->name('presensi.updateStatus');
+    Route::get('/laporan-presensi', [PresensiController::class, 'rekap'])->name('presensi.rekap');
 
     Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
     Route::get('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate');

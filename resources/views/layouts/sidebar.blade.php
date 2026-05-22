@@ -139,6 +139,13 @@
                     <div>Laporan Keuangan</div>
                 </a>
             </li>
+
+            <li class="menu-item {{ request()->is('laporan-presensi') ? 'active' : '' }}">
+                <a href="{{ route('presensi.rekap') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-calendar-event"></i>
+                    <div>Laporan Presensi</div>
+                </a>
+            </li>
         @endif
 
 

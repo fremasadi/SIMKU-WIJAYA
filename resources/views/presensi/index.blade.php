@@ -5,7 +5,7 @@
     $role = auth()->user()->role;
     $isOwner = $role == 'owner';
     $isAdmin = $role == 'admin';
-    $isEditMode = $isAdmin && request()->boolean('edit');
+    $isEditMode = $isAdmin && $canManagePresensi && request()->boolean('edit');
 @endphp
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -23,12 +23,33 @@
     </div>
     @endif
 
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    @endif
+
+    @if($isSunday)
+    <div class="alert alert-warning" role="alert">
+        Hari Minggu tidak ada pengisian presensi.
+    </div>
+    @elseif($isPastDate)
+    <div class="alert alert-info" role="alert">
+        Presensi tanggal yang sudah lewat hanya bisa dilihat, tidak bisa diisi atau diperbaiki.
+    </div>
+    @elseif($isFutureDate)
+    <div class="alert alert-info" role="alert">
+        Presensi tanggal mendatang belum bisa diisi.
+    </div>
+    @endif
+
     <!-- Filter -->
     <div class="card mb-3 p-3">
         <form action="{{ route('presensi.index') }}" method="GET" class="row g-2">
             <div class="col-md-4">
                 <label class="form-label">Tanggal</label>
-                <input type="date" name="date" class="form-control" value="{{ request('date', $date) }}">
+                <input type="date" name="date" class="form-control" value="{{ request('date', $date) }}" max="{{ now()->toDateString() }}">
             </div>
             <div class="col-md-4">
                 <label class="form-label">Karyawan</label>
@@ -58,10 +79,14 @@
                         <a href="{{ route('presensi.index', array_filter(['date' => request('date', $date), 'karyawan_id' => request('karyawan_id')])) }}" class="btn btn-secondary btn-sm">
                             Batal
                         </a>
-                    @else
+                    @elseif($canManagePresensi)
                         <a href="{{ route('presensi.index', array_filter(['date' => request('date', $date), 'karyawan_id' => request('karyawan_id'), 'edit' => 1])) }}" class="btn btn-warning btn-sm">
                             Edit Presensi
                         </a>
+                    @else
+                        <button type="button" class="btn btn-label-secondary btn-sm" disabled>
+                            Edit Tidak Tersedia
+                        </button>
                     @endif
                 </div>
             @endif
@@ -80,12 +105,13 @@
                             <th>#</th>
                             <th>Nama Karyawan</th>
                             <th>Status Hadir</th>
+                            <th>Alasan Tidak Hadir</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($presensis as $p)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $presensis->firstItem() + $loop->index }}</td>
                             <td>{{ $p->karyawan->nama }}</td>
                             <td class="text-center">
                                 @if(!$isEditMode)
@@ -97,13 +123,32 @@
                                 @else
                                 <input type="hidden" name="presensi_ids[]" value="{{ $p->id }}">
                                 <input type="checkbox" name="status_hadir[{{ $p->id }}]" value="Hadir"
+                                    class="status-hadir-toggle"
+                                    data-target="#alasan-{{ $p->id }}"
                                     {{ $p->status_hadir == 'Hadir' ? 'checked' : '' }}>
+                                @endif
+                            </td>
+                            <td>
+                                @if(!$isEditMode)
+                                    @if($p->status_hadir == 'Tidak Hadir')
+                                        {{ $p->alasan_tidak_hadir ?: '-' }}
+                                    @else
+                                        -
+                                    @endif
+                                @else
+                                    <input type="text"
+                                        id="alasan-{{ $p->id }}"
+                                        name="alasan_tidak_hadir[{{ $p->id }}]"
+                                        class="form-control form-control-sm alasan-tidak-hadir"
+                                        value="{{ old('alasan_tidak_hadir.' . $p->id, $p->alasan_tidak_hadir) }}"
+                                        placeholder="Isi alasan jika tidak hadir"
+                                        {{ $p->status_hadir == 'Hadir' ? 'disabled' : 'required' }}>
                                 @endif
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="text-center py-3">Tidak ada data presensi</td>
+                            <td colspan="4" class="text-center py-3">Tidak ada data presensi</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -117,5 +162,38 @@
         </div>
     </div>
 
+    <div class="mt-3">
+        {{ $presensis->links() }}
+    </div>
+
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const syncAlasanInput = function (checkbox) {
+        const input = document.querySelector(checkbox.dataset.target);
+
+        if (!input) {
+            return;
+        }
+
+        input.disabled = checkbox.checked;
+        input.required = !checkbox.checked;
+
+        if (checkbox.checked) {
+            input.value = '';
+        }
+    };
+
+    document.querySelectorAll('.status-hadir-toggle').forEach(function (checkbox) {
+        syncAlasanInput(checkbox);
+
+        checkbox.addEventListener('change', function () {
+            syncAlasanInput(checkbox);
+        });
+    });
+});
+</script>
+@endpush

@@ -8,6 +8,7 @@ use App\Models\Penjualan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class KeuanganController extends Controller
 {
@@ -37,9 +38,19 @@ class KeuanganController extends Controller
 
         $bulan = (int) $request->get('bulan', now()->month);
         $tahun = (int) $request->get('tahun', now()->year);
+        $jenisTransaksi = $request->get('jenis', 'semua');
+        $jenisOptions = [
+            'semua' => 'Semua Transaksi',
+            'penjualan' => 'Penjualan',
+            'pembelian' => 'Pembelian',
+        ];
 
         if ($bulan < 1 || $bulan > 12) {
             $bulan = now()->month;
+        }
+
+        if (!array_key_exists($jenisTransaksi, $jenisOptions)) {
+            $jenisTransaksi = 'semua';
         }
 
         $penjualanQuery = Penjualan::with('user')
@@ -93,6 +104,7 @@ class KeuanganController extends Controller
                     'keterangan' => $item->kode_penjualan ? 'Penjualan ' . $item->kode_penjualan : 'Penjualan Produk',
                     'pemasukan' => (float) $item->total,
                     'pengeluaran' => 0,
+                    'jenis' => 'penjualan',
                     'urutan' => 1,
                     'id' => $item->id,
                 ];
@@ -103,6 +115,7 @@ class KeuanganController extends Controller
                     'keterangan' => 'Pembelian Bahan Baku #' . $item->id,
                     'pemasukan' => 0,
                     'pengeluaran' => (float) $item->total,
+                    'jenis' => 'pembelian',
                     'urutan' => 2,
                     'id' => $item->id,
                 ];
@@ -113,10 +126,19 @@ class KeuanganController extends Controller
                     'keterangan' => 'Pembayaran Gaji - ' . ($item->karyawan->nama ?? 'Karyawan'),
                     'pemasukan' => 0,
                     'pengeluaran' => (float) $item->jumlah_gaji,
+                    'jenis' => 'gaji',
                     'urutan' => 3,
                     'id' => $item->id,
                 ];
-            }))
+            }));
+
+        if ($jenisTransaksi !== 'semua') {
+            $transaksiKeuangan = $transaksiKeuangan
+                ->where('jenis', $jenisTransaksi)
+                ->values();
+        }
+
+        $transaksiKeuangan = $transaksiKeuangan
             ->sortBy([
                 ['tanggal', 'asc'],
                 ['urutan', 'asc'],
@@ -131,6 +153,24 @@ class KeuanganController extends Controller
 
             return $item;
         });
+        $totalPemasukanTampil = $transaksiKeuangan->sum('pemasukan');
+        $totalPengeluaranTampil = $transaksiKeuangan->sum('pengeluaran');
+        $saldoAkhirTampil = $totalPemasukanTampil - $totalPengeluaranTampil;
+
+        if (!$request->routeIs('keuangan.exportPdf')) {
+            $page = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 10;
+            $transaksiKeuangan = new LengthAwarePaginator(
+                $transaksiKeuangan->forPage($page, $perPage)->values(),
+                $transaksiKeuangan->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'query' => $request->query(),
+                ]
+            );
+        }
 
         $periodeMulai = Carbon::create($tahun, $bulan, 1)->startOfMonth();
         $periodeSelesai = ($bulan === (int) now()->month && $tahun === (int) now()->year)
@@ -171,6 +211,11 @@ class KeuanganController extends Controller
             'periodeMulai',
             'periodeSelesai',
             'kondisiKeuangan',
+            'jenisTransaksi',
+            'jenisOptions',
+            'totalPemasukanTampil',
+            'totalPengeluaranTampil',
+            'saldoAkhirTampil',
             'detailPenjualans',
             'detailPembelians',
             'detailGajis'

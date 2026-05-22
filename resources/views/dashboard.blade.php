@@ -259,12 +259,12 @@
     </div>
     @endif
 
-    <!-- Chart Penjualan vs Pembelian -->
+    <!-- Chart Produk Terlaris -->
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Tren (6 Bulan Terakhir)</h5>
+                    <h5 class="mb-0">Produk Terlaris</h5>
                 </div>
                 <div class="card-body">
                     <canvas id="chartTren" height="80"></canvas>
@@ -277,39 +277,24 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const chartData = @json($chartData);
-    const isKasir = @json(auth()->user()->role === 'kasir');
-
+    const chartData = @json($topSellingProducts);
     const ctx = document.getElementById('chartTren').getContext('2d');
 
-    let datasets = [
-        {
-            label: 'Penjualan',
-            data: chartData.map(d => d.penjualan),
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.1)',
-            tension: 0.4,
-            fill: true
-        }
-    ];
-
-    // hanya tampilkan pembelian jika bukan kasir
-    if (!isKasir) {
-        datasets.push({
-            label: 'Pembelian',
-            data: chartData.map(d => d.pembelian),
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.1)',
-            tension: 0.4,
-            fill: true
-        });
-    }
-
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
-            labels: chartData.map(d => d.bulan),
-            datasets: datasets
+            labels: chartData.map(d => d.nama_produk),
+            datasets: [
+                {
+                    label: 'Jumlah Terjual',
+                    data: chartData.map(d => Number(d.total_jumlah)),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    maxBarThickness: 50,
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -318,10 +303,7 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) label += ': ';
-                            label += 'Rp ' + context.parsed.y.toLocaleString('id-ID');
-                            return label;
+                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID');
                         }
                     }
                 }
@@ -330,7 +312,7 @@
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => 'Rp ' + value.toLocaleString('id-ID')
+                        callback: value => value.toLocaleString('id-ID')
                     }
                 }
             }

@@ -15,6 +15,73 @@
 
             <ul class="navbar-nav flex-row align-items-center ms-auto">
 
+                @if(auth()->user()->role != 'kasir')
+                <!-- Stock Notifications -->
+                <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3">
+                    <a class="nav-link dropdown-toggle hide-arrow position-relative" href="javascript:void(0);" data-bs-toggle="dropdown">
+                        <i class="bx bx-bell bx-sm"></i>
+                        @if($jumlahBahanBakuMenipis > 0)
+                            <span class="badge bg-danger rounded-pill badge-notifications position-absolute top-0 start-100 translate-middle">
+                                {{ $jumlahBahanBakuMenipis > 99 ? '99+' : $jumlahBahanBakuMenipis }}
+                            </span>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" style="width: 360px;">
+                        <li>
+                            <div class="dropdown-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">Notifikasi Stok</h6>
+                                    <small class="text-muted">Batas menipis: {{ number_format($batasStokMenipis, 0, ',', '.') }}</small>
+                                </div>
+                                @if($jumlahBahanBakuMenipis > 0)
+                                    <span class="badge bg-label-danger">{{ $jumlahBahanBakuMenipis }}</span>
+                                @endif
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
+
+                        @forelse($bahanBakuMenipis as $bahan)
+                            <li>
+                                <a class="dropdown-item" href="{{ route('bahan-baku.index') }}">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <span class="badge bg-label-warning rounded p-2">
+                                                <i class="bx bx-error-circle"></i>
+                                            </span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <span class="fw-semibold d-block">{{ $bahan->nama_bahan }}</span>
+                                            <small class="text-muted">
+                                                Stok tersisa {{ number_format((float) $bahan->stok, 2, ',', '.') }} {{ $bahan->satuan }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        @empty
+                            <li>
+                                <div class="dropdown-item text-center text-muted py-3">
+                                    Stok bahan baku aman
+                                </div>
+                            </li>
+                        @endforelse
+
+                        @if($jumlahBahanBakuMenipis > $bahanBakuMenipis->count())
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-center" href="{{ route('bahan-baku.index') }}">
+                                    Lihat semua bahan baku menipis
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
+                @endif
+
                 <!-- User Info -->
                 <li class="nav-item me-3">
                     <span class="fw-semibold">{{ auth()->user()->role == 'super_admin' ? 'Super Admin' : ucfirst(auth()->user()->role) }}</span>

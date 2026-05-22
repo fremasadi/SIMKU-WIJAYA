@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class GajiController extends Controller
 {
-    const GAJI_MINGGUAN = 300000; // gaji per 2 minggu
+    const GAJI_BULANAN = 300000; // gaji per bulan
     const POTONGAN = 50000;       // potongan per ketidakhadiran
 
     /**
@@ -21,8 +21,8 @@ class GajiController extends Controller
     public function index(Request $request)
     {
         $today = \Carbon\Carbon::today();
-        $default_start = $today->copy()->subDays(13); // 2 minggu terakhir
-        $default_end = $today;
+        $default_start = $today->copy()->startOfMonth();
+        $default_end = $today->copy()->endOfMonth();
 
         // Ambil filter dari request jika ada
         $start = $request->start ? \Carbon\Carbon::parse($request->start) : $default_start;
@@ -32,10 +32,13 @@ class GajiController extends Controller
                 'karyawan',
                 'potongans' => fn ($query) => $query->orderBy('tanggal'),
             ])
-            ->whereBetween('periode_awal', [$start, $end])
-            ->orWhereBetween('periode_akhir', [$start, $end])
+            ->where(function ($query) use ($start, $end) {
+                $query->whereBetween('periode_awal', [$start, $end])
+                    ->orWhereBetween('periode_akhir', [$start, $end]);
+            })
             ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('gaji.index', compact('gajis', 'start', 'end'));
     }
@@ -76,7 +79,7 @@ class GajiController extends Controller
     }
 
     /**
-     * Auto-generate gaji mingguan
+     * Auto-generate gaji bulanan
      */
     public function generate()
     {
@@ -96,7 +99,7 @@ class GajiController extends Controller
                     $periode_awal = Carbon::parse($karyawan->tanggal_masuk);
                 }
 
-                $periode_akhir = (clone $periode_awal)->addDays(13); // 2 minggu
+                $periode_akhir = $periode_awal->copy()->endOfMonth();
 
                 // Ambil ketidakhadiran di periode ini untuk hitung dan rincian potongan
                 $presensiTidakHadir = Presensi::where('karyawan_id', $karyawan->id)
@@ -105,7 +108,7 @@ class GajiController extends Controller
                                             ->get();
 
                 $tidakHadir = $presensiTidakHadir->count();
-                $jumlahGaji = self::GAJI_MINGGUAN - ($tidakHadir * self::POTONGAN);
+                $jumlahGaji = self::GAJI_BULANAN - ($tidakHadir * self::POTONGAN);
 
                 // Simpan gaji
                 $gaji = Gaji::create([
@@ -132,6 +135,6 @@ class GajiController extends Controller
         });
 
 
-        return redirect()->back()->with('success', 'Gaji otomatis berhasil digenerate.');
+        return redirect()->back()->with('success', 'Gaji bulanan otomatis berhasil digenerate.');
     }
 }

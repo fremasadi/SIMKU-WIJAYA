@@ -99,6 +99,7 @@
 
     <p class="period"><strong>Periode:</strong> {{ $periodeMulai->format('d/m/Y') }} -
         {{ $periodeSelesai->format('d/m/Y') }}
+        | <strong>Jenis:</strong> {{ $jenisOptions[$jenisTransaksi] }}
     </p>
 
     <table class="report-table">
@@ -135,9 +136,9 @@
         <tfoot>
             <tr>
                 <th colspan="2">TOTAL</th>
-                <th class="text-right">Rp{{ number_format($pendapatan, 0, ',', '.') }},00</th>
-                <th class="text-right">Rp{{ number_format($totalBeban, 0, ',', '.') }},00</th>
-                <th class="text-right">Rp{{ number_format($labaBersih, 0, ',', '.') }},00</th>
+                <th class="text-right">Rp{{ number_format($totalPemasukanTampil, 0, ',', '.') }},00</th>
+                <th class="text-right">Rp{{ number_format($totalPengeluaranTampil, 0, ',', '.') }},00</th>
+                <th class="text-right">Rp{{ number_format($saldoAkhirTampil, 0, ',', '.') }},00</th>
             </tr>
         </tfoot>
     </table>
@@ -145,11 +146,13 @@
     <div class="summary">
         <div class="summary-row">
             <strong>Sisa Saldo:</strong>
-            Rp{{ number_format($labaBersih, 0, ',', '.') }},00
+            Rp{{ number_format($saldoAkhirTampil, 0, ',', '.') }},00
         </div>
         <div class="summary-row">
             <strong>Kondisi Keuangan:</strong>
-            <span class="status {{ $labaBersih >= 0 ? 'positive' : 'negative' }}">{{ $kondisiKeuangan }}</span>
+            <span class="status {{ $saldoAkhirTampil >= 0 ? 'positive' : 'negative' }}">
+                {{ $saldoAkhirTampil >= 0 ? 'POSITIF' : 'NEGATIF' }}
+            </span>
         </div>
     </div>
 </body>

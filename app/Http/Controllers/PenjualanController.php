@@ -26,7 +26,7 @@ class PenjualanController extends Controller
         }
 
         $totalPenjualan = (clone $query)->sum('total');
-        $penjualans = $query->get();
+        $penjualans = $query->paginate(10)->withQueryString();
         return view('penjualan.index', compact('penjualans', 'totalPenjualan'));
     }
 

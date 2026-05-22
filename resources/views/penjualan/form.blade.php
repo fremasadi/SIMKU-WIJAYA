@@ -34,7 +34,7 @@
                 <td><input type="number" name="jumlah[]" class="form-control jumlah" step="0.01" required></td>
                 <td>
                     <input type="hidden" name="harga[]" class="harga" required>
-                    <input type="number" class="form-control harga-display" step="0.01" disabled>
+                    <input type="text" class="form-control harga-display rupiah-display" disabled>
                 </td>
                 <td><button type="button" class="btn btn-danger btn-sm removeRow"><i class="bx bx-trash"></i></button></td>
             </tr>
@@ -53,19 +53,62 @@ function syncHarga(row) {
     const harga = parseFloat(selectedOption.data('harga')) || 0;
 
     row.find('.harga').val(harga.toFixed(2));
-    row.find('.harga-display').val(harga.toFixed(2));
+    row.find('.harga-display').val(harga.toLocaleString('id-ID'));
+}
+
+function getSelectedProdukIds() {
+    return $('#detailTable select[name="produk_id[]"]').map(function(){
+        return $(this).val();
+    }).get().filter(function(value){
+        return value !== "" && value !== null;
+    });
+}
+
+function updateProdukOptions() {
+    const selectedIds = getSelectedProdukIds();
+
+    $('#detailTable select[name="produk_id[]"] option').each(function(){
+        const optionValue = $(this).val();
+        if(optionValue === "") {
+            $(this).prop('disabled', false);
+            return;
+        }
+
+        const currentSelect = $(this).closest('select');
+        const currentValue = currentSelect.val();
+        const shouldDisable = optionValue !== currentValue && selectedIds.includes(optionValue);
+
+        $(this).prop('disabled', shouldDisable);
+    });
+}
+
+function hasDuplicateProduk(produkId, currentRow) {
+    let duplicate = false;
+
+    $('#detailTable select[name="produk_id[]"]').not(currentRow.find('select[name="produk_id[]"]')).each(function(){
+        if($(this).val() === produkId) {
+            duplicate = true;
+            return false;
+        }
+    });
+
+    return duplicate;
 }
 
 $(document).ready(function(){
     $('#addRow').click(function(){
         const newRow = $('#detailTable tbody tr:first').clone();
         newRow.find('input, select').val('');
+        newRow.find('select[name="produk_id[]"] option').prop('disabled', false);
+        newRow.find('.harga-display').val('');
         $('#detailTable tbody').append(newRow);
+        updateProdukOptions();
     });
 
     $('#detailTable').on('click', '.removeRow', function(){
         if($('#detailTable tbody tr').length > 1){
             $(this).closest('tr').remove();
+            updateProdukOptions();
         }
     });
 
@@ -91,13 +134,29 @@ $(document).ready(function(){
         }
     });
 
-    // Validasi stok saat pilihan produk diubah (jika jumlah sudah terisi)
+    // Validasi stok dan duplikasi saat pilihan produk diubah
     $('#detailTable').on('change', 'select[name="produk_id[]"]', function(){
         let tr = $(this).closest('tr');
+        let selectedValue = $(this).val();
+
+        if(selectedValue !== "" && hasDuplicateProduk(selectedValue, tr)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Produk Sudah Dipilih!',
+                text: 'Produk ini sudah ada di baris lain. Pilih produk lain.',
+                confirmButtonText: 'Mengerti'
+            });
+            $(this).val('');
+            tr.find('.harga').val('');
+            tr.find('.harga-display').val('');
+            tr.find('input[name="jumlah[]"]').val('');
+            updateProdukOptions();
+            return;
+        }
+
         let option = $(this).find('option:selected');
         let jumlahInput = tr.find('input[name="jumlah[]"]');
-        
-        let stok = parseFloat(option.data('stok'));
+        let stok = parseFloat(option.data('stok')) || 0;
         jumlahInput.attr('max', stok);
 
         let jumlah = parseFloat(jumlahInput.val());
@@ -113,11 +172,14 @@ $(document).ready(function(){
         }
 
         syncHarga(tr);
+        updateProdukOptions();
     });
 
     $('#detailTable tbody tr').each(function(){
         syncHarga($(this));
     });
+
+    updateProdukOptions();
 });
 </script>
 @endpush

@@ -22,85 +22,92 @@
                         <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
                     @endfor
                 </select>
+                <select name="jenis" class="form-select form-select-sm" style="width: 160px;">
+                    @foreach($jenisOptions as $value => $label)
+                        <option value="{{ $value }}" {{ $jenisTransaksi === $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
                 <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                <a href="{{ route('keuangan.exportPdf', ['bulan' => $bulan, 'tahun' => $tahun]) }}" target="_blank"
+                <a href="{{ route('keuangan.exportPdf', ['bulan' => $bulan, 'tahun' => $tahun, 'jenis' => $jenisTransaksi]) }}" target="_blank"
                     rel="noopener" class="btn btn-sm btn-danger">
                     Preview PDF
                 </a>
             </form>
         </div>
 
-        <!-- <div class="row mb-4">
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <p class="card-text mb-1">Pendapatan</p>
-                                                <h4 class="mb-1 text-success">Rp {{ number_format($pendapatan, 0, ',', '.') }}</h4>
-                                                <small class="text-muted">{{ $totalTransaksiPenjualan }} transaksi penjualan</small>
-                                            </div>
-                                            <span class="badge bg-label-success rounded p-2">
-                                                <i class="bx bx-trending-up bx-sm"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="card-text mb-1">Total Pemasukan</p>
+                                <h4 class="mb-1 text-success">Rp {{ number_format($totalPemasukanTampil, 0, ',', '.') }}</h4>
+                                <small class="text-muted">{{ $jenisOptions[$jenisTransaksi] }}</small>
                             </div>
+                            <span class="badge bg-label-success rounded p-2">
+                                <i class="bx bx-trending-up bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <p class="card-text mb-1">Beban Pokok</p>
-                                                <h4 class="mb-1 text-danger">Rp {{ number_format($bebanPokok, 0, ',', '.') }}</h4>
-                                                <small class="text-muted">{{ $totalTransaksiPembelian }} transaksi pembelian</small>
-                                            </div>
-                                            <span class="badge bg-label-danger rounded p-2">
-                                                <i class="bx bx-shopping-bag bx-sm"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="card-text mb-1">Total Pengeluaran</p>
+                                <h4 class="mb-1 text-danger">Rp {{ number_format($totalPengeluaranTampil, 0, ',', '.') }}</h4>
+                                <small class="text-muted">Periode terpilih</small>
                             </div>
+                            <span class="badge bg-label-danger rounded p-2">
+                                <i class="bx bx-trending-down bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <p class="card-text mb-1">Beban Gaji</p>
-                                                <h4 class="mb-1 text-danger">Rp {{ number_format($bebanGaji, 0, ',', '.') }}</h4>
-                                                <small class="text-muted">{{ $totalGajiDibayar }} gaji dibayar</small>
-                                            </div>
-                                            <span class="badge bg-label-warning rounded p-2">
-                                                <i class="bx bx-wallet bx-sm"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100 border-{{ $saldoAkhirTampil >= 0 ? 'success' : 'danger' }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="card-text mb-1">Saldo Akhir</p>
+                                <h4 class="mb-1 {{ $saldoAkhirTampil >= 0 ? 'text-success' : 'text-danger' }}">
+                                    Rp {{ number_format($saldoAkhirTampil, 0, ',', '.') }}
+                                </h4>
+                                <small class="text-muted">{{ $saldoAkhirTampil >= 0 ? 'Saldo positif' : 'Saldo negatif' }}</small>
                             </div>
+                            <span class="badge bg-label-{{ $saldoAkhirTampil >= 0 ? 'success' : 'danger' }} rounded p-2">
+                                <i class="bx bx-wallet bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <div class="card h-100 border-{{ $labaBersih >= 0 ? 'success' : 'danger' }}">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <p class="card-text mb-1">Laba Bersih</p>
-                                                <h4 class="mb-1 {{ $labaBersih >= 0 ? 'text-success' : 'text-danger' }}">
-                                                    Rp {{ number_format($labaBersih, 0, ',', '.') }}
-                                                </h4>
-                                                <small class="text-muted">Margin {{ number_format($marginBersih, 2) }}%</small>
-                                            </div>
-                                            <span class="badge bg-label-{{ $labaBersih >= 0 ? 'success' : 'danger' }} rounded p-2">
-                                                <i class="bx bx-dollar-circle bx-sm"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="card-text mb-1">Total Transaksi</p>
+                                <h4 class="mb-1">{{ number_format($transaksiKeuangan->total(), 0, ',', '.') }}</h4>
+                                <small class="text-muted">{{ $periodeMulai->format('d/m/Y') }} - {{ $periodeSelesai->format('d/m/Y') }}</small>
                             </div>
-                        </div> -->
+                            <span class="badge bg-label-info rounded p-2">
+                                <i class="bx bx-receipt bx-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-12 mb-4">
@@ -110,10 +117,11 @@
                             <h5 class="mb-1">Laporan Keuangan</h5>
                             <small class="text-muted">
                                 Periode: {{ $periodeMulai->format('d/m/Y') }} - {{ $periodeSelesai->format('d/m/Y') }}
+                                | {{ $jenisOptions[$jenisTransaksi] }}
                             </small>
                         </div>
-                        <span class="badge bg-label-{{ $labaBersih >= 0 ? 'success' : 'danger' }}">
-                            Kondisi {{ $kondisiKeuangan }}
+                        <span class="badge bg-label-{{ $saldoAkhirTampil >= 0 ? 'success' : 'danger' }}">
+                            Kondisi {{ $saldoAkhirTampil >= 0 ? 'POSITIF' : 'NEGATIF' }}
                         </span>
                     </div>
                     <div class="table-responsive">
@@ -153,15 +161,19 @@
                             <tfoot class="table-light">
                                 <tr>
                                     <th colspan="2" class="text-uppercase">Total</th>
-                                    <th class="text-end text-success">Rp {{ number_format($pendapatan, 0, ',', '.') }}</th>
-                                    <th class="text-end text-danger">Rp {{ number_format($totalBeban, 0, ',', '.') }}</th>
-                                    <th class="text-end {{ $labaBersih >= 0 ? 'text-success' : 'text-danger' }}">
-                                        Rp {{ number_format($labaBersih, 0, ',', '.') }}
+                                    <th class="text-end text-success">Rp {{ number_format($totalPemasukanTampil, 0, ',', '.') }}</th>
+                                    <th class="text-end text-danger">Rp {{ number_format($totalPengeluaranTampil, 0, ',', '.') }}</th>
+                                    <th class="text-end {{ $saldoAkhirTampil >= 0 ? 'text-success' : 'text-danger' }}">
+                                        Rp {{ number_format($saldoAkhirTampil, 0, ',', '.') }}
                                     </th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
+                </div>
+
+                <div class="mt-3">
+                    {{ $transaksiKeuangan->links() }}
                 </div>
             </div>
         </div>

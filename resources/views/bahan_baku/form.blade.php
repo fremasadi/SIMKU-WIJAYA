@@ -28,7 +28,7 @@
 
 <div class="mb-3">
     <label class="form-label">Harga Satuan</label>
-    <input type="number" step="0.01" name="harga_satuan" class="form-control"
+    <input type="text" inputmode="numeric" name="harga_satuan" class="form-control rupiah-input"
         value="{{ old('harga_satuan', $bahanBaku->harga_satuan ?? 0) }}" required>
 </div>
 

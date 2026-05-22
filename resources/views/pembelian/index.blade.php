@@ -38,7 +38,7 @@
                 <tbody>
                     @forelse($pembelians as $p)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $pembelians->firstItem() + $loop->index }}</td>
                         <td>{{ $p->tanggal_pembelian->format('d-m-Y') }}</td>
                         <td>{{ $p->user->name }}</td>
                         <td>{{ number_format($p->total,2) }}</td>
@@ -72,6 +72,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="mt-3">
+        {{ $pembelians->links() }}
     </div>
 
 </div>

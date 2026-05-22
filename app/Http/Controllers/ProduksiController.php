@@ -16,7 +16,7 @@ class ProduksiController extends Controller
      */
     public function index()
     {
-        $produksis = Produksi::with('produk')->latest()->get();
+        $produksis = Produksi::with('produk')->latest()->paginate(10)->withQueryString();
         return view('produksi.index', compact('produksis'));
     }
 
@@ -89,7 +89,7 @@ class ProduksiController extends Controller
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-            $produksi = Produksi::with('detailProduksis')->findOrFail($id);
+            $produksi = Produksi::with(['produk', 'detailProduksis.bahanBaku'])->findOrFail($id);
 
             // rollback stok bahan baku
             foreach ($produksi->detailProduksis as $detail) {

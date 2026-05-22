@@ -39,7 +39,7 @@
                 <tbody>
                     @forelse($produks as $p)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $produks->firstItem() + $loop->index }}</td>
                         <td><strong>{{ $p->nama_produk }}</strong></td>
                         <td>Rp {{ number_format($p->harga ?? 0, 2, ',', '.') }}</td>
                         <td>{{ $p->stok }}</td>
@@ -75,6 +75,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="mt-3">
+        {{ $produks->links() }}
     </div>
 
 </div>

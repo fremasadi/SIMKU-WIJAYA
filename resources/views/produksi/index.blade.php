@@ -38,7 +38,7 @@
                 <tbody>
                     @forelse($produksis as $p)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $produksis->firstItem() + $loop->index }}</td>
                         <td>{{ $p->produk->nama_produk }}</td>
                         <td>{{ $p->tanggal_produksi->format('d-m-Y') }}</td>
                         <td>{{ $p->jumlah_produksi }}</td>
@@ -54,7 +54,7 @@
                                     <form action="{{ route('produksi.destroy', $p->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="dropdown-item" onclick="return confirm('Yakin hapus produksi?')">
+                                        <button class="dropdown-item" onclick="return confirm('Yakin hapus produksi? Stok bahan baku akan dikembalikan.')">
                                             <i class="bx bx-trash me-1"></i> Hapus
                                         </button>
                                     </form>
@@ -72,6 +72,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="mt-3">
+        {{ $produksis->links() }}
     </div>
 
 </div>

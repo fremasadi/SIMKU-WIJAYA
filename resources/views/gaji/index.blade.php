@@ -17,7 +17,7 @@
     @if(auth()->user()->role == 'admin')
     <div class="mb-3">
         <a href="{{ route('gaji.generate') }}" class="btn btn-primary">
-            Generate Gaji Otomatis
+            Generate Gaji Bulanan
         </a>
     </div>
     @endif
@@ -51,7 +51,7 @@
                 <tbody>
                     @forelse($gajis as $g)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $gajis->firstItem() + $loop->index }}</td>
                         <td>{{ $g->karyawan->nama }}</td>
                         <td>{{ $g->periode_awal->format('d-m-Y') }}</td>
                         <td>{{ $g->periode_akhir->format('d-m-Y') }}</td>
@@ -77,6 +77,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="mt-3">
+        {{ $gajis->links() }}
     </div>
 
     @foreach($gajis as $g)

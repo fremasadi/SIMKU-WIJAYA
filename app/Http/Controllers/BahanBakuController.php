@@ -12,7 +12,7 @@ class BahanBakuController extends Controller
      */
     public function index()
     {
-        $bahanBakus = BahanBaku::latest()->get();
+        $bahanBakus = BahanBaku::latest()->paginate(10)->withQueryString();
         return view('bahan_baku.index', compact('bahanBakus'));
     }
 

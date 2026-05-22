@@ -18,7 +18,8 @@ class PembelianController extends Controller
     {
         $pembelians = Pembelian::with('user')
             ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('pembelian.index', compact('pembelians'));
     }

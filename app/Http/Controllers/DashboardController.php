@@ -50,8 +50,8 @@ class DashboardController extends Controller
         // LABA BERSIH
         $labaBersih = $pendapatan - $totalBeban;
 
-        // DATA CHART - Penjualan vs Pembelian 6 bulan terakhir
-        $chartData = $this->getChartData();
+        // DATA CHART - Produk terlaris bulan ini
+        $topSellingProducts = $this->getTopSellingProducts($bulan, $tahun);
 
         // STATISTIK RINGKAS
         $totalPenjualanBulanIni = Penjualan::whereMonth('tanggal_penjualan', $bulan)
@@ -74,7 +74,7 @@ class DashboardController extends Controller
             'labaBersih',
             'bulan',
             'tahun',
-            'chartData',
+            'topSellingProducts',
             'totalPenjualanBulanIni',
             'totalPembelianBulanIni',
             'stokBahanBaku',
@@ -82,30 +82,17 @@ class DashboardController extends Controller
         ));
     }
 
-    private function getChartData()
+    private function getTopSellingProducts($bulan, $tahun)
     {
-        $data = [];
+        return DB::table('detail_penjualans')
+            ->join('penjualans', 'detail_penjualans.penjualan_id', '=', 'penjualans.id')
+            ->select('detail_penjualans.nama_produk', DB::raw('SUM(detail_penjualans.jumlah) as total_jumlah'))
+            ->whereMonth('penjualans.tanggal_penjualan', $bulan)
+            ->whereYear('penjualans.tanggal_penjualan', $tahun)
+            ->groupBy('detail_penjualans.nama_produk')
+            ->orderByDesc('total_jumlah')
+            ->limit(6)
+            ->get();
 
-        for ($i = 5; $i >= 0; $i--) {
-            $date = Carbon::now()->subMonths($i);
-            $bulan = $date->month;
-            $tahun = $date->year;
-
-            $penjualan = Penjualan::whereMonth('tanggal_penjualan', $bulan)
-                ->whereYear('tanggal_penjualan', $tahun)
-                ->sum('total');
-
-            $pembelian = Pembelian::whereMonth('tanggal_pembelian', $bulan)
-                ->whereYear('tanggal_pembelian', $tahun)
-                ->sum('total');
-
-            $data[] = [
-                'bulan' => $date->format('M Y'),
-                'penjualan' => (float) $penjualan,
-                'pembelian' => (float) $pembelian,
-            ];
-        }
-
-        return $data;
     }
 }

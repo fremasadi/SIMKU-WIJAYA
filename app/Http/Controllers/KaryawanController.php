@@ -12,7 +12,7 @@ class KaryawanController extends Controller
      */
     public function index()
     {
-        $karyawans = Karyawan::latest()->get();
+        $karyawans = Karyawan::latest()->paginate(10)->withQueryString();
         return view('karyawan.index', compact('karyawans'));
     }
 
