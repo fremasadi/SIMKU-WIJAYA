@@ -62,6 +62,7 @@ class BahanBakuController extends Controller
             'satuan'        => 'required|string|max:50',
             'stok'          => 'required|numeric|min:0',
             'harga_satuan'  => 'required|numeric|min:0',
+            'keterangan'    => 'nullable|string',
         ]);
 
         $bahanBaku = BahanBaku::findOrFail($id);

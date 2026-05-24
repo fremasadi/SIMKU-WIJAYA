@@ -94,13 +94,13 @@
                                         <a class="dropdown-item" href="{{ route('penjualan.show', $p->id) }}">
                                             <i class="bx bx-show-alt me-1"></i> Detail
                                         </a>
-                                        <form action="{{ route('penjualan.destroy', $p->id) }}" method="POST">
+                                        {{-- <form action="{{ route('penjualan.destroy', $p->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button class="dropdown-item" onclick="return confirm('Yakin hapus penjualan?')">
                                                 <i class="bx bx-trash me-1"></i> Hapus
                                             </button>
-                                        </form>
+                                        </form> --}}
                                     </div>
                                 </div>
                             </td>

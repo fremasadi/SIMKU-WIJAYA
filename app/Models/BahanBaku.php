@@ -19,6 +19,7 @@ class BahanBaku extends Model
         'satuan',
         'stok',
         'harga_satuan',
+        'keterangan',
     ];
 
     protected $casts = [

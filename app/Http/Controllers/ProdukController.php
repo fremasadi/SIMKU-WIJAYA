@@ -36,12 +36,19 @@ class ProdukController extends Controller
             'stok'        => 'nullable|numeric|min:0',
         ]);
 
-        Produk::create([
+        $produk = Produk::create([
             'nama_produk' => $request->nama_produk,
             'harga'       => $request->harga ?? 0,
             'satuan'      => $request->satuan,
             'stok'        => $request->input('stok', 0),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Produk berhasil ditambahkan',
+                'produk' => $produk,
+            ], 201);
+        }
 
         return redirect()
             ->route('produk.index')

@@ -28,6 +28,41 @@
             </a>
         </li>
 
+        {{-- ================= MASTER DATA ================= --}}
+        @if(auth()->user()->role != 'kasir')
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Master Data</span>
+            </li>
+
+            <li class="menu-item {{ request()->is('produk', 'produk/*') ? 'active' : '' }}">
+                <a href="{{ route('produk.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-package"></i>
+                    <div>Produk</div>
+                </a>
+            </li>
+
+            <li class="menu-item {{ request()->is('bahan-baku', 'bahan-baku/*') ? 'active' : '' }}">
+                <a href="{{ route('bahan-baku.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-box"></i>
+                    <div>Bahan Baku</div>
+                </a>
+            </li>
+
+            <li class="menu-item {{ request()->is('karyawan', 'karyawan/*') ? 'active' : '' }}">
+                <a href="{{ route('karyawan.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-group"></i>
+                    <div>Karyawan</div>
+                </a>
+            </li>
+
+            <li class="menu-item {{ request()->is('presensi', 'presensi/*') ? 'active' : '' }}">
+                <a href="{{ route('presensi.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                    <div>Presensi</div>
+                </a>
+            </li>
+        @endif
+
         {{-- ================= TRANSAKSI ================= --}}
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Transaksi</span>
@@ -89,43 +124,6 @@
                 </a>
             </li>
         @endif
-
-
-        {{-- ================= MASTER DATA ================= --}}
-        @if(auth()->user()->role != 'kasir')
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Master Data</span>
-            </li>
-
-            <li class="menu-item {{ request()->is('produk', 'produk/*') ? 'active' : '' }}">
-                <a href="{{ route('produk.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-package"></i>
-                    <div>Produk</div>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->is('bahan-baku', 'bahan-baku/*') ? 'active' : '' }}">
-                <a href="{{ route('bahan-baku.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-box"></i>
-                    <div>Bahan Baku</div>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->is('karyawan', 'karyawan/*') ? 'active' : '' }}">
-                <a href="{{ route('karyawan.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-group"></i>
-                    <div>Karyawan</div>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->is('presensi', 'presensi/*') ? 'active' : '' }}">
-                <a href="{{ route('presensi.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-calendar-check"></i>
-                    <div>Presensi</div>
-                </a>
-            </li>
-        @endif
-
 
         {{-- ================= LAPORAN ================= --}}
         @if(in_array(auth()->user()->role, ['admin', 'owner']))

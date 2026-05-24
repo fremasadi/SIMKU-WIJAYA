@@ -10,14 +10,19 @@
 
 <div class="mb-3">
     <label class="form-label">Produk</label>
-    <select name="produk_id" class="form-control" required>
-        <option value="">-- Pilih Produk --</option>
-        @foreach ($produks as $produk)
-            <option value="{{ $produk->id }}" {{ old('produk_id') == $produk->id ? 'selected' : '' }}>
-                {{ $produk->nama_produk }}
-            </option>
-        @endforeach
-    </select>
+    <div class="input-group">
+        <select name="produk_id" id="produkSelect" class="form-control" required>
+            <option value="">-- Pilih Produk --</option>
+            @foreach ($produks as $produk)
+                <option value="{{ $produk->id }}" {{ old('produk_id') == $produk->id ? 'selected' : '' }}>
+                    {{ $produk->nama_produk }}
+                </option>
+            @endforeach
+        </select>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createProdukModal">
+            <i class="bx bx-plus"></i>
+        </button>
+    </div>
 </div>
 
 <div class="mb-3">
@@ -71,11 +76,51 @@
 <button class="btn btn-success">{{ $button }}</button>
 <a href="{{ route('produksi.index') }}" class="btn btn-secondary">Kembali</a>
 
+<div class="modal fade" id="createProdukModal" tabindex="-1" aria-labelledby="createProdukModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createProdukModalLabel">Tambah Produk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger d-none" id="createProdukError"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nama Produk</label>
+                    <input type="text" id="modalNamaProduk" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Harga</label>
+                    <input type="text" inputmode="numeric" id="modalHargaProduk" class="form-control rupiah-input">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Satuan</label>
+                    <select id="modalSatuanProduk" class="form-select">
+                        <option value="">-- Pilih Satuan --</option>
+                        @foreach (['Kg', 'Gram', 'Pack', 'Bal', 'Dus', 'Pcs'] as $satuan)
+                            <option value="{{ $satuan }}">{{ $satuan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-success" id="saveProdukButton">Simpan Produk</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             const tableBody = $('#detailTable tbody');
+            const produkModal = new bootstrap.Modal(document.getElementById('createProdukModal'));
+            const produkError = $('#createProdukError');
 
             function syncRowAttributes(row) {
                 const selectedOption = row.find('select[name="bahan_baku_id[]"] option:selected');
@@ -200,6 +245,56 @@
 
             tableBody.find('tr').each(function() {
                 syncRowAttributes($(this));
+            });
+
+            $('#createProdukModal input, #createProdukModal select').on('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    $('#saveProdukButton').trigger('click');
+                }
+            });
+
+            $('#saveProdukButton').click(function() {
+                const button = $(this);
+
+                produkError.addClass('d-none').empty();
+                button.prop('disabled', true).text('Menyimpan...');
+
+                $.ajax({
+                    url: "{{ route('produk.store') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        Accept: 'application/json',
+                        'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                    },
+                    data: {
+                        nama_produk: $('#modalNamaProduk').val(),
+                        harga: $('#modalHargaProduk').val().replace(/\./g, ''),
+                        satuan: $('#modalSatuanProduk').val(),
+                        stok: 0
+                    },
+                    success: function(response) {
+                        const produk = response.produk;
+                        const option = new Option(produk.nama_produk, produk.id, true, true);
+
+                        $('#produkSelect').append(option).trigger('change');
+                        $('#modalNamaProduk, #modalHargaProduk').val('');
+                        $('#modalSatuanProduk').val('');
+                        produkModal.hide();
+                    },
+                    error: function(xhr) {
+                        const errors = xhr.responseJSON?.errors;
+                        const message = errors
+                            ? Object.values(errors).flat().join('<br>')
+                            : 'Produk gagal ditambahkan. Coba lagi.';
+
+                        produkError.removeClass('d-none').html(message);
+                    },
+                    complete: function() {
+                        button.prop('disabled', false).text('Simpan Produk');
+                    }
+                });
             });
         });
     </script>

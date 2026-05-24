@@ -32,5 +32,12 @@
         value="{{ old('harga_satuan', $bahanBaku->harga_satuan ?? 0) }}" required>
 </div>
 
+@isset($bahanBaku)
+    <div class="mb-3">
+        <label class="form-label">Keterangan</label>
+        <textarea name="keterangan" class="form-control" rows="4">{{ old('keterangan', $bahanBaku->keterangan ?? '') }}</textarea>
+    </div>
+@endisset
+
 <button class="btn btn-success">{{ $button }}</button>
 <a href="{{ route('bahan-baku.index') }}" class="btn btn-secondary">Kembali</a>
