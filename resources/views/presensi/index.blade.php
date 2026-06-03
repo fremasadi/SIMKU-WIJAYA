@@ -99,9 +99,12 @@
                 <input type="hidden" name="date" value="{{ request('date', $date) }}">
                 <input type="hidden" name="karyawan_id" value="{{ request('karyawan_id') }}">
                 @if($presensis->count())
-                <div class="mb-3">
+                <div class="mb-3 d-flex gap-2">
                     <button type="button" class="btn btn-label-success btn-sm" id="checkAllPresensi">
                         <i class="bx bx-check-double me-1"></i> Centang Semua
+                    </button>
+                    <button type="button" class="btn btn-label-secondary btn-sm" id="uncheckAllPresensi">
+                        <i class="bx bx-x me-1"></i> Hapus Centang
                     </button>
                 </div>
                 @endif
@@ -111,7 +114,14 @@
                         <tr>
                             <th>#</th>
                             <th>Nama Karyawan</th>
-                            <th>Status Hadir</th>
+                            <th class="text-center">
+                                Status Hadir
+                                @if($isEditMode && $presensis->count())
+                                    <div class="form-check d-flex justify-content-center mt-1">
+                                        <input type="checkbox" class="form-check-input" id="toggleAllPresensi">
+                                    </div>
+                                @endif
+                            </th>
                             <th>Alasan Tidak Hadir</th>
                         </tr>
                     </thead>
@@ -199,19 +209,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
         checkbox.addEventListener('change', function () {
             syncAlasanInput(checkbox);
+            updateToggleAllState();
         });
     });
 
     const checkAllButton = document.getElementById('checkAllPresensi');
+    const uncheckAllButton = document.getElementById('uncheckAllPresensi');
+    const toggleAllCheckbox = document.getElementById('toggleAllPresensi');
+
+    const getPresensiCheckboxes = function () {
+        return Array.from(document.querySelectorAll('.status-hadir-toggle'));
+    };
+
+    const updateToggleAllState = function () {
+        const checkboxes = getPresensiCheckboxes();
+
+        if (!toggleAllCheckbox || !checkboxes.length) {
+            return;
+        }
+
+        const checkedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+
+        toggleAllCheckbox.checked = checkedCount === checkboxes.length;
+        toggleAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+    };
+
+    const setAllPresensi = function (checked) {
+        getPresensiCheckboxes().forEach(function (checkbox) {
+            checkbox.checked = checked;
+            syncAlasanInput(checkbox);
+        });
+
+        updateToggleAllState();
+    };
 
     if (checkAllButton) {
         checkAllButton.addEventListener('click', function () {
-            document.querySelectorAll('.status-hadir-toggle').forEach(function (checkbox) {
-                checkbox.checked = true;
-                syncAlasanInput(checkbox);
-            });
+            setAllPresensi(true);
         });
     }
+
+    if (uncheckAllButton) {
+        uncheckAllButton.addEventListener('click', function () {
+            setAllPresensi(false);
+        });
+    }
+
+    if (toggleAllCheckbox) {
+        toggleAllCheckbox.addEventListener('change', function () {
+            setAllPresensi(toggleAllCheckbox.checked);
+        });
+    }
+
+    updateToggleAllState();
 });
 </script>
 @endpush
