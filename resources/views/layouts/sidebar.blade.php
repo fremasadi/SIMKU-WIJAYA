@@ -48,6 +48,13 @@
                 </a>
             </li>
 
+            <li class="menu-item {{ request()->is('penyesuaian-stok-bahan-baku', 'penyesuaian-stok-bahan-baku/*') ? 'active' : '' }}">
+                <a href="{{ route('penyesuaian-stok-bahan-baku.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
+                    <div>Penyesuaian Stok</div>
+                </a>
+            </li>
+
             <li class="menu-item {{ request()->is('karyawan', 'karyawan/*') ? 'active' : '' }}">
                 <a href="{{ route('karyawan.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-group"></i>

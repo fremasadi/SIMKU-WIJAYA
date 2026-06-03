@@ -58,4 +58,9 @@ class BahanBaku extends Model
         return $this->hasMany(DetailProduksi::class, 'bahan_baku_id');
     }
 
+    public function penyesuaianStok()
+    {
+        return $this->hasMany(PenyesuaianStokBahanBaku::class, 'bahan_baku_id');
+    }
+
 }

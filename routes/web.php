@@ -12,6 +12,7 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\PenyesuaianStokBahanBakuController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -25,8 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('karyawan', KaryawanController::class);
     Route::resource('bahan-baku', BahanBakuController::class);
+    Route::resource('penyesuaian-stok-bahan-baku', PenyesuaianStokBahanBakuController::class)
+        ->only(['index', 'create', 'store', 'show']);
     Route::resource('produk', ProdukController::class);
     Route::resource('pembelian', PembelianController::class);
+    Route::patch('/produksi/{produksi}/status', [ProduksiController::class, 'updateStatus'])->name('produksi.updateStatus');
     Route::resource('produksi', ProduksiController::class);
     Route::resource('penjualan', PenjualanController::class);
 

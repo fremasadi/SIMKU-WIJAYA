@@ -9,7 +9,12 @@ class Produksi extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['produk_id', 'kode_produksi', 'tanggal_produksi', 'jumlah_produksi'];
+    public const STATUS_PROSES = 'proses';
+    public const STATUS_SELESAI = 'selesai';
+    public const STATUS_GAGAL = 'gagal';
+    public const STATUS_BATAL = 'batal';
+
+    protected $fillable = ['produk_id', 'kode_produksi', 'tanggal_produksi', 'jumlah_produksi', 'status'];
 
     protected $casts = [
         'tanggal_produksi' => 'date',
@@ -30,6 +35,16 @@ class Produksi extends Model
     public function detailProduksis()
     {
         return $this->hasMany(DetailProduksi::class);
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return [
+            self::STATUS_PROSES => 'Proses',
+            self::STATUS_SELESAI => 'Selesai',
+            self::STATUS_GAGAL => 'Gagal',
+            self::STATUS_BATAL => 'Batal',
+        ][$this->status] ?? ucfirst((string) $this->status);
     }
 
     protected static function booted()

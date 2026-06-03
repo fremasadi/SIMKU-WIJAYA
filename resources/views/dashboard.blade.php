@@ -263,11 +263,14 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Produk Terlaris</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Tren Produk Terlaris Mingguan</h5>
+                    <small class="text-muted">
+                        {{ DateTime::createFromFormat('!m', $bulan)->format('F') }} {{ $tahun }}
+                    </small>
                 </div>
                 <div class="card-body">
-                    <canvas id="chartTren" height="80"></canvas>
+                    <canvas id="chartTrenProdukTerlaris" height="95"></canvas>
                 </div>
             </div>
         </div>
@@ -277,40 +280,71 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const chartData = @json($topSellingProducts);
-    const ctx = document.getElementById('chartTren').getContext('2d');
+    const chartData = @json($topSellingProductsTrend);
+    const ctx = document.getElementById('chartTrenProdukTerlaris').getContext('2d');
 
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: chartData.map(d => d.nama_produk),
-            datasets: [
-                {
-                    label: 'Jumlah Terjual',
-                    data: chartData.map(d => Number(d.total_jumlah)),
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    maxBarThickness: 50,
-                }
-            ]
+            labels: chartData.labels,
+            datasets: chartData.datasets.map(dataset => ({
+                label: dataset.label,
+                data: dataset.data.map(value => Number(value)),
+                borderColor: dataset.borderColor,
+                backgroundColor: dataset.backgroundColor,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointBackgroundColor: dataset.borderColor,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }))
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
-                legend: { position: 'top' },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'line',
+                        boxWidth: 34,
+                        boxHeight: 6
+                    }
+                },
                 tooltip: {
+                    mode: 'index',
+                    intersect: false,
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID');
+                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID') + ' terjual';
                         }
                     }
                 }
             },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
             scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        maxRotation: 35,
+                        minRotation: 35
+                    }
+                },
                 y: {
                     beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.12)'
+                    },
                     ticks: {
                         callback: value => value.toLocaleString('id-ID')
                     }

@@ -174,6 +174,7 @@ class ProduksiSeeder extends Seeder
                 'produk_id' => $produks[$data['produk']]->id,
                 'tanggal_produksi' => $data['tanggal_produksi'],
                 'jumlah_produksi' => $data['jumlah_produksi'],
+                'status' => Produksi::STATUS_SELESAI,
             ]);
 
             foreach ($data['bahan'] as $bahan) {

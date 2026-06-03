@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BahanBaku;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BahanBakuController extends Controller
 {
@@ -30,10 +31,13 @@ class BahanBakuController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_bahan'    => 'required|string|max:255',
+            'nama_bahan'    => ['required', 'string', 'max:255', Rule::unique('bahan_bakus', 'nama_bahan')],
             'satuan'        => 'required|string|max:50',
             'stok'          => 'required|numeric|min:0',
             'harga_satuan'  => 'required|numeric|min:0',
+            'keterangan'    => 'nullable|string',
+        ], [
+            'nama_bahan.unique' => 'Nama bahan sudah digunakan.',
         ]);
 
         BahanBaku::create($request->all());
@@ -58,11 +62,18 @@ class BahanBakuController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_bahan'    => 'required|string|max:255',
+            'nama_bahan'    => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('bahan_bakus', 'nama_bahan')->ignore($id),
+            ],
             'satuan'        => 'required|string|max:50',
             'stok'          => 'required|numeric|min:0',
             'harga_satuan'  => 'required|numeric|min:0',
             'keterangan'    => 'nullable|string',
+        ], [
+            'nama_bahan.unique' => 'Nama bahan sudah digunakan.',
         ]);
 
         $bahanBaku = BahanBaku::findOrFail($id);

@@ -23,6 +23,10 @@
                             <th>Tanggal Produksi</th>
                             <td>: {{ $produksi->tanggal_produksi->format('d-m-Y') }}</td>
                         </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>: {{ $produksi->status_label }}</td>
+                        </tr>
                     </table>
                 </div>
 

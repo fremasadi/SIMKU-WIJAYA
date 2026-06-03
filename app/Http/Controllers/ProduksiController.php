@@ -86,6 +86,7 @@ class ProduksiController extends Controller
                 'produk_id' => $request->produk_id,
                 'tanggal_produksi' => $request->tanggal_produksi,
                 'jumlah_produksi' => $request->jumlah_produksi,
+                'status' => Produksi::STATUS_PROSES,
             ]);
 
             // 2️⃣ Simpan detail produksi & kurangi stok bahan baku
@@ -103,9 +104,7 @@ class ProduksiController extends Controller
                 $bahan->decrement('stok', $jumlahBahan);
             }
 
-            // 3️⃣ Tambahkan stok produk jadi
-            $produk = Produk::findOrFail($request->produk_id);
-            $produk->increment('stok', $request->jumlah_produksi);
+            // Stok produk jadi ditambahkan saat status produksi diselesaikan.
         });
 
         return redirect()->route('produksi.index')->with('success', 'Produksi berhasil disimpan');
@@ -121,6 +120,44 @@ class ProduksiController extends Controller
     }
 
     /**
+     * Update status produksi.
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:selesai,gagal,batal',
+        ]);
+
+        DB::transaction(function () use ($request, $id) {
+            $produksi = Produksi::with(['produk', 'detailProduksis.bahanBaku'])
+                ->lockForUpdate()
+                ->findOrFail($id);
+
+            if ($produksi->status !== Produksi::STATUS_PROSES) {
+                throw ValidationException::withMessages([
+                    'status' => 'Status produksi hanya bisa diubah saat masih proses.',
+                ]);
+            }
+
+            if ($request->status === Produksi::STATUS_SELESAI) {
+                $produksi->produk->increment('stok', $produksi->jumlah_produksi);
+            }
+
+            if ($request->status === Produksi::STATUS_BATAL) {
+                foreach ($produksi->detailProduksis as $detail) {
+                    $detail->bahanBaku->increment('stok', $detail->jumlah_bahan);
+                }
+            }
+
+            $produksi->update([
+                'status' => $request->status,
+            ]);
+        });
+
+        return redirect()->route('produksi.index')->with('success', 'Status produksi berhasil diperbarui');
+    }
+
+    /**
      * Hapus produksi (rollback stok)
      */
     public function destroy($id)
@@ -128,13 +165,15 @@ class ProduksiController extends Controller
         DB::transaction(function () use ($id) {
             $produksi = Produksi::with(['produk', 'detailProduksis.bahanBaku'])->findOrFail($id);
 
-            // rollback stok bahan baku
-            foreach ($produksi->detailProduksis as $detail) {
-                $detail->bahanBaku->increment('stok', $detail->jumlah_bahan);
+            if (in_array($produksi->status, [Produksi::STATUS_PROSES, Produksi::STATUS_SELESAI], true)) {
+                foreach ($produksi->detailProduksis as $detail) {
+                    $detail->bahanBaku->increment('stok', $detail->jumlah_bahan);
+                }
             }
 
-            // rollback stok produk
-            $produksi->produk->decrement('stok', $produksi->jumlah_produksi);
+            if ($produksi->status === Produksi::STATUS_SELESAI) {
+                $produksi->produk->decrement('stok', $produksi->jumlah_produksi);
+            }
 
             $produksi->delete();
         });

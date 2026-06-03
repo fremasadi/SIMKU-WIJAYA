@@ -50,8 +50,8 @@ class DashboardController extends Controller
         // LABA BERSIH
         $labaBersih = $pendapatan - $totalBeban;
 
-        // DATA CHART - Produk terlaris bulan ini
-        $topSellingProducts = $this->getTopSellingProducts($bulan, $tahun);
+        // DATA CHART - Tren produk terlaris per minggu
+        $topSellingProductsTrend = $this->getTopSellingProductsWeeklyTrend($bulan, $tahun);
 
         // STATISTIK RINGKAS
         $totalPenjualanBulanIni = Penjualan::whereMonth('tanggal_penjualan', $bulan)
@@ -74,7 +74,7 @@ class DashboardController extends Controller
             'labaBersih',
             'bulan',
             'tahun',
-            'topSellingProducts',
+            'topSellingProductsTrend',
             'totalPenjualanBulanIni',
             'totalPembelianBulanIni',
             'stokBahanBaku',
@@ -82,17 +82,80 @@ class DashboardController extends Controller
         ));
     }
 
-    private function getTopSellingProducts($bulan, $tahun)
+    private function getTopSellingProductsWeeklyTrend($bulan, $tahun)
     {
-        return DB::table('detail_penjualans')
+        $startOfMonth = Carbon::create($tahun, $bulan, 1)->startOfDay();
+        $endOfMonth = $startOfMonth->copy()->endOfMonth()->endOfDay();
+        $weeks = [];
+        $weekStart = $startOfMonth->copy();
+
+        while ($weekStart->lte($endOfMonth)) {
+            $weekEnd = $weekStart->copy()->addDays(6)->min($endOfMonth);
+            $weekNumber = count($weeks) + 1;
+
+            $weeks[] = [
+                'label' => 'Minggu ' . $weekNumber . ' (' . $weekStart->format('d') . '-' . $weekEnd->format('d M') . ')',
+                'start' => $weekStart->copy(),
+                'end' => $weekEnd->copy(),
+            ];
+
+            $weekStart = $weekEnd->copy()->addDay()->startOfDay();
+        }
+
+        $topProducts = DB::table('detail_penjualans')
             ->join('penjualans', 'detail_penjualans.penjualan_id', '=', 'penjualans.id')
             ->select('detail_penjualans.nama_produk', DB::raw('SUM(detail_penjualans.jumlah) as total_jumlah'))
             ->whereMonth('penjualans.tanggal_penjualan', $bulan)
             ->whereYear('penjualans.tanggal_penjualan', $tahun)
             ->groupBy('detail_penjualans.nama_produk')
             ->orderByDesc('total_jumlah')
-            ->limit(6)
+            ->limit(4)
             ->get();
 
+        $productNames = $topProducts->pluck('nama_produk');
+
+        $sales = DB::table('detail_penjualans')
+            ->join('penjualans', 'detail_penjualans.penjualan_id', '=', 'penjualans.id')
+            ->select(
+                'detail_penjualans.nama_produk',
+                'penjualans.tanggal_penjualan',
+                DB::raw('SUM(detail_penjualans.jumlah) as total_jumlah')
+            )
+            ->whereIn('detail_penjualans.nama_produk', $productNames)
+            ->whereBetween('penjualans.tanggal_penjualan', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->groupBy('detail_penjualans.nama_produk', 'penjualans.tanggal_penjualan')
+            ->get();
+
+        $colors = [
+            ['border' => 'rgb(54, 162, 235)', 'background' => 'rgba(54, 162, 235, 0.18)'],
+            ['border' => 'rgb(75, 192, 128)', 'background' => 'rgba(75, 192, 128, 0.18)'],
+            ['border' => 'rgb(255, 159, 64)', 'background' => 'rgba(255, 159, 64, 0.16)'],
+            ['border' => 'rgb(153, 102, 255)', 'background' => 'rgba(153, 102, 255, 0.16)'],
+        ];
+
+        $datasets = $topProducts->values()->map(function ($product, $index) use ($weeks, $sales, $colors) {
+            $data = collect($weeks)->map(function ($week) use ($sales, $product) {
+                return (float) $sales
+                    ->filter(function ($item) use ($week, $product) {
+                        $tanggal = Carbon::parse($item->tanggal_penjualan);
+
+                        return $item->nama_produk === $product->nama_produk
+                            && $tanggal->betweenIncluded($week['start'], $week['end']);
+                    })
+                    ->sum('total_jumlah');
+            })->values();
+
+            return [
+                'label' => $product->nama_produk,
+                'data' => $data,
+                'borderColor' => $colors[$index]['border'],
+                'backgroundColor' => $colors[$index]['background'],
+            ];
+        });
+
+        return [
+            'labels' => collect($weeks)->pluck('label'),
+            'datasets' => $datasets,
+        ];
     }
 }

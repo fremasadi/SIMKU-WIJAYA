@@ -1,7 +1,10 @@
 <div class="mb-3">
     <label class="form-label">Nama Bahan</label>
-    <input type="text" name="nama_bahan" class="form-control"
+    <input type="text" name="nama_bahan" class="form-control @error('nama_bahan') is-invalid @enderror"
         value="{{ old('nama_bahan', $bahanBaku->nama_bahan ?? '') }}" required>
+    @error('nama_bahan')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="mb-3">
