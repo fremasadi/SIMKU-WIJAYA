@@ -98,6 +98,13 @@
                 @csrf
                 <input type="hidden" name="date" value="{{ request('date', $date) }}">
                 <input type="hidden" name="karyawan_id" value="{{ request('karyawan_id') }}">
+                @if($presensis->count())
+                <div class="mb-3">
+                    <button type="button" class="btn btn-label-success btn-sm" id="checkAllPresensi">
+                        <i class="bx bx-check-double me-1"></i> Centang Semua
+                    </button>
+                </div>
+                @endif
             @endif
                 <table class="table table-bordered">
                     <thead>
@@ -194,6 +201,17 @@ document.addEventListener('DOMContentLoaded', function () {
             syncAlasanInput(checkbox);
         });
     });
+
+    const checkAllButton = document.getElementById('checkAllPresensi');
+
+    if (checkAllButton) {
+        checkAllButton.addEventListener('click', function () {
+            document.querySelectorAll('.status-hadir-toggle').forEach(function (checkbox) {
+                checkbox.checked = true;
+                syncAlasanInput(checkbox);
+            });
+        });
+    }
 });
 </script>
 @endpush

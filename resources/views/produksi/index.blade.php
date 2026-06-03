@@ -70,7 +70,7 @@
                                     <a class="dropdown-item" href="{{ route('produksi.show', $p->id) }}">
                                         <i class="bx bx-show-alt me-1"></i> Detail
                                     </a>
-                                    @if(auth()->user()->role != 'owner' && $p->status === \App\Models\Produksi::STATUS_PROSES)
+                                    @if(auth()->user()->role != 'admin' && $p->status === \App\Models\Produksi::STATUS_PROSES)
                                         <form action="{{ route('produksi.updateStatus', $p->id) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
