@@ -17,11 +17,9 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Riwayat Penyesuaian Stok Bahan Baku</h5>
-            @if(auth()->user()->role != 'owner')
             <a href="{{ route('penyesuaian-stok-bahan-baku.create') }}" class="btn btn-primary">
                 <i class="bx bx-plus me-1"></i> Tambah Penyesuaian
             </a>
-            @endif
         </div>
 
         <div class="table-responsive text-nowrap">
