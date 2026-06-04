@@ -79,44 +79,57 @@ class GajiController extends Controller
     }
 
     /**
-     * Auto-generate gaji bulanan
+     * Auto-generate gaji untuk periode minggu berjalan.
      */
     public function generate()
     {
-        $karyawans = Karyawan::all();
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
+        }
 
-        DB::transaction(function () use ($karyawans) {
+        [$periodeAwal, $periodeAkhir] = $this->getCurrentWeeklyPeriod();
+        $karyawans = Karyawan::whereDate('tanggal_masuk', '<=', $periodeAkhir)->get();
+        $generated = 0;
+
+        DB::transaction(function () use ($karyawans, $periodeAwal, $periodeAkhir, &$generated) {
             foreach ($karyawans as $karyawan) {
+                $awalKerja = Carbon::parse($karyawan->tanggal_masuk)->startOfDay();
+                $awalPeriodeKaryawan = $awalKerja->gt($periodeAwal)
+                    ? $awalKerja
+                    : $periodeAwal->copy();
 
-                // Cek gaji terakhir
-                $lastGaji = Gaji::where('karyawan_id', $karyawan->id)
-                                ->orderByDesc('periode_akhir')
-                                ->first();
-
-                if ($lastGaji) {
-                    $periode_awal = Carbon::parse($lastGaji->periode_akhir)->addDay();
-                } else {
-                    $periode_awal = Carbon::parse($karyawan->tanggal_masuk);
+                if ($awalPeriodeKaryawan->gt($periodeAkhir)) {
+                    continue;
                 }
 
-                $periode_akhir = $periode_awal->copy()->endOfMonth();
+                $sudahAda = Gaji::where('karyawan_id', $karyawan->id)
+                    ->whereDate('periode_awal', $awalPeriodeKaryawan)
+                    ->whereDate('periode_akhir', $periodeAkhir)
+                    ->exists();
+
+                if ($sudahAda) {
+                    continue;
+                }
 
                 // Ambil ketidakhadiran di periode ini untuk hitung dan rincian potongan
                 $presensiTidakHadir = Presensi::where('karyawan_id', $karyawan->id)
-                                            ->whereBetween('tanggal', [$periode_awal, $periode_akhir])
-                                            ->where('status_hadir', 'Tidak Hadir')
-                                            ->get();
+                    ->whereBetween('tanggal', [$awalPeriodeKaryawan, $periodeAkhir])
+                    ->where('status_hadir', 'Tidak Hadir')
+                    ->get();
 
                 $tidakHadir = $presensiTidakHadir->count();
-                $jumlahGaji = self::GAJI_BULANAN - ($tidakHadir * self::POTONGAN);
+                $jumlahHariPeriode = $awalPeriodeKaryawan->diffInDays($periodeAkhir) + 1;
+                $jumlahHariBulan = $periodeAwal->daysInMonth;
+                $gajiPeriode = (self::GAJI_BULANAN / $jumlahHariBulan) * $jumlahHariPeriode;
+                $jumlahGaji = $gajiPeriode - ($tidakHadir * self::POTONGAN);
 
                 // Simpan gaji
                 $gaji = Gaji::create([
                     'karyawan_id' => $karyawan->id,
-                    'periode_awal' => $periode_awal,
-                    'periode_akhir' => $periode_akhir,
+                    'periode_awal' => $awalPeriodeKaryawan,
+                    'periode_akhir' => $periodeAkhir,
                     'jumlah_gaji' => max($jumlahGaji, 0),
-                    'tanggal_bayar' => $periode_akhir,
+                    'tanggal_bayar' => $periodeAkhir,
                     'status' => 'Belum Dibayar',
                 ]);
 
@@ -131,10 +144,33 @@ class GajiController extends Controller
                         'jumlah_potongan' => self::POTONGAN,
                     ]);
                 }
+
+                $generated++;
             }
         });
 
+        if ($generated === 0) {
+            return redirect()->back()->with(
+                'success',
+                "Gaji periode {$periodeAwal->format('d-m-Y')} s/d {$periodeAkhir->format('d-m-Y')} sudah pernah digenerate."
+            );
+        }
 
-        return redirect()->back()->with('success', 'Gaji bulanan otomatis berhasil digenerate.');
+        return redirect()->back()->with(
+            'success',
+            "{$generated} gaji mingguan periode {$periodeAwal->format('d-m-Y')} s/d {$periodeAkhir->format('d-m-Y')} berhasil digenerate."
+        );
+    }
+
+    private function getCurrentWeeklyPeriod(): array
+    {
+        $today = Carbon::today();
+        $startDay = intdiv($today->day - 1, 7) * 7 + 1;
+        $endDay = min($startDay + 6, $today->daysInMonth);
+
+        return [
+            $today->copy()->day($startDay)->startOfDay(),
+            $today->copy()->day($endDay)->endOfDay(),
+        ];
     }
 }

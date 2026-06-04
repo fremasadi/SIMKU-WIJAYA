@@ -31,6 +31,25 @@
             @endif
         </div>
 
+        <div class="card-body border-top border-bottom">
+            <form action="{{ route('produksi.index') }}" method="GET" class="row g-2 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label">Cari Nama Produk</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-search"></i></span>
+                        <input type="search" name="search" class="form-control"
+                            value="{{ request('search') }}" placeholder="Masukkan nama produk">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-search me-1"></i> Cari
+                    </button>
+                    <a href="{{ route('produksi.index') }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>

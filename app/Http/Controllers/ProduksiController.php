@@ -15,9 +15,20 @@ class ProduksiController extends Controller
     /**
      * List produksi
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produksis = Produksi::with('produk')->latest()->paginate(10)->withQueryString();
+        $search = trim((string) $request->input('search'));
+
+        $produksis = Produksi::with('produk')
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('produk', function ($produkQuery) use ($search) {
+                    $produkQuery->where('nama_produk', 'like', '%' . $search . '%');
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('produksi.index', compact('produksis'));
     }
 

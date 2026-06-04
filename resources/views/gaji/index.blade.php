@@ -16,9 +16,13 @@
 
     @if(auth()->user()->role == 'admin')
     <div class="mb-3">
-        <a href="{{ route('gaji.generate') }}" class="btn btn-primary">
-            Generate Gaji Bulanan
-        </a>
+        <form action="{{ route('gaji.generate') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Generate gaji untuk periode minggu berjalan?')">
+                <i class="bx bx-calendar-plus me-1"></i> Generate Gaji Mingguan
+            </button>
+        </form>
     </div>
     @endif
     <form method="GET" class="mb-3 row g-2 align-items-center">

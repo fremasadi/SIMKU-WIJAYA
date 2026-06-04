@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan-presensi', [PresensiController::class, 'rekap'])->name('presensi.rekap');
 
     Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
-    Route::get('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate');
+    Route::post('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate');
     Route::patch('/gaji/bayar-terpilih', [GajiController::class, 'markSelectedAsPaid'])->name('gaji.bayarTerpilih');
     Route::patch('/gaji/{gaji}/bayar', [GajiController::class, 'markAsPaid'])->name('gaji.bayar');
 
