@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class GajiController extends Controller
 {
-    const GAJI_BULANAN = 300000; // gaji per bulan
+    const GAJI_HARIAN = 50000;    // gaji per hari kerja
     const POTONGAN = 50000;       // potongan per ketidakhadiran
 
     /**
@@ -118,9 +118,8 @@ class GajiController extends Controller
                     ->get();
 
                 $tidakHadir = $presensiTidakHadir->count();
-                $jumlahHariPeriode = $awalPeriodeKaryawan->diffInDays($periodeAkhir) + 1;
-                $jumlahHariBulan = $periodeAwal->daysInMonth;
-                $gajiPeriode = (self::GAJI_BULANAN / $jumlahHariBulan) * $jumlahHariPeriode;
+                $jumlahHariKerja = $this->countWorkingDays($awalPeriodeKaryawan, $periodeAkhir);
+                $gajiPeriode = self::GAJI_HARIAN * $jumlahHariKerja;
                 $jumlahGaji = $gajiPeriode - ($tidakHadir * self::POTONGAN);
 
                 // Simpan gaji
@@ -172,5 +171,18 @@ class GajiController extends Controller
             $today->copy()->day($startDay)->startOfDay(),
             $today->copy()->day($endDay)->endOfDay(),
         ];
+    }
+
+    private function countWorkingDays(Carbon $start, Carbon $end): int
+    {
+        $days = 0;
+
+        for ($date = $start->copy()->startOfDay(); $date->lte($end); $date->addDay()) {
+            if (!$date->isSunday()) {
+                $days++;
+            }
+        }
+
+        return $days;
     }
 }

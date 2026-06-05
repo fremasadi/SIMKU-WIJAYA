@@ -9,14 +9,10 @@ use Illuminate\Database\Seeder;
 
 class GajiSeeder extends Seeder
 {
+    private const GAJI_HARIAN = 50000;
+
     public function run(): void
     {
-        // Gaji bulanan dasar berdasarkan jabatan, dibagi proporsional per minggu.
-        $gajiPerJabatan = [
-            'Karyawan Jemur' => 30000,
-            'Karyawan Produksi' => 40000,
-        ];
-
         $karyawans = Karyawan::all();
         $months = [
             ['year' => 2025, 'month' => 10, 'status' => 'Dibayar'],
@@ -31,19 +27,32 @@ class GajiSeeder extends Seeder
 
             for ($periodStart = $monthStart->copy(); $periodStart->lte($monthEnd); $periodStart->addDays(7)) {
                 $periodEnd = $periodStart->copy()->addDays(6)->min($monthEnd);
-                $periodDays = $periodStart->diffInDays($periodEnd) + 1;
+                $workingDays = $this->countWorkingDays($periodStart, $periodEnd);
 
                 foreach ($karyawans as $karyawan) {
                     Gaji::create([
                         'karyawan_id' => $karyawan->id,
                         'periode_awal' => $periodStart,
                         'periode_akhir' => $periodEnd,
-                        'jumlah_gaji' => ($gajiPerJabatan[$karyawan->jabatan] / $monthEnd->day) * $periodDays,
+                        'jumlah_gaji' => self::GAJI_HARIAN * $workingDays,
                         'tanggal_bayar' => $periodEnd,
                         'status' => $month['status'],
                     ]);
                 }
             }
         }
+    }
+
+    private function countWorkingDays(Carbon $start, Carbon $end): int
+    {
+        $days = 0;
+
+        for ($date = $start->copy()->startOfDay(); $date->lte($end); $date->addDay()) {
+            if (!$date->isSunday()) {
+                $days++;
+            }
+        }
+
+        return $days;
     }
 }

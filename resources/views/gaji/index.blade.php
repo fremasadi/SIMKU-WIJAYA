@@ -19,9 +19,12 @@
         <form action="{{ route('gaji.generate') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-primary"
-                onclick="return confirm('Generate gaji untuk periode minggu berjalan?')">
+                onclick="return confirm('Generate gaji minggu berjalan? Perhitungan Rp50.000 per hari kerja, Minggu tidak dihitung.')">
                 <i class="bx bx-calendar-plus me-1"></i> Generate Gaji Mingguan
             </button>
+            <small class="text-muted d-block mt-1">
+                Rp50.000 per hari kerja, Minggu tidak dihitung.
+            </small>
         </form>
     </div>
     @endif
