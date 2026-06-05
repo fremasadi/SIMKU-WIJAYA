@@ -90,8 +90,9 @@ class GajiController extends Controller
         [$periodeAwal, $periodeAkhir] = $this->getCurrentWeeklyPeriod();
         $karyawans = Karyawan::whereDate('tanggal_masuk', '<=', $periodeAkhir)->get();
         $generated = 0;
+        $updated = 0;
 
-        DB::transaction(function () use ($karyawans, $periodeAwal, $periodeAkhir, &$generated) {
+        DB::transaction(function () use ($karyawans, $periodeAwal, $periodeAkhir, &$generated, &$updated) {
             foreach ($karyawans as $karyawan) {
                 $awalKerja = Carbon::parse($karyawan->tanggal_masuk)->startOfDay();
                 $awalPeriodeKaryawan = $awalKerja->gt($periodeAwal)
@@ -102,13 +103,13 @@ class GajiController extends Controller
                     continue;
                 }
 
-                $sudahAda = Gaji::where('karyawan_id', $karyawan->id)
+                $deleted = Gaji::where('karyawan_id', $karyawan->id)
                     ->whereDate('periode_awal', $awalPeriodeKaryawan)
                     ->whereDate('periode_akhir', $periodeAkhir)
-                    ->exists();
+                    ->delete();
 
-                if ($sudahAda) {
-                    continue;
+                if ($deleted > 0) {
+                    $updated += $deleted;
                 }
 
                 // Ambil ketidakhadiran di periode ini untuk hitung dan rincian potongan
@@ -151,13 +152,19 @@ class GajiController extends Controller
         if ($generated === 0) {
             return redirect()->back()->with(
                 'success',
-                "Gaji periode {$periodeAwal->format('d-m-Y')} s/d {$periodeAkhir->format('d-m-Y')} sudah pernah digenerate."
+                "Tidak ada karyawan yang bisa digenerate untuk periode {$periodeAwal->format('d-m-Y')} s/d {$periodeAkhir->format('d-m-Y')}."
             );
+        }
+
+        $message = "{$generated} gaji mingguan periode {$periodeAwal->format('d-m-Y')} s/d {$periodeAkhir->format('d-m-Y')} berhasil digenerate.";
+
+        if ($updated > 0) {
+            $message .= " {$updated} data lama diganti dengan hitungan terbaru.";
         }
 
         return redirect()->back()->with(
             'success',
-            "{$generated} gaji mingguan periode {$periodeAwal->format('d-m-Y')} s/d {$periodeAkhir->format('d-m-Y')} berhasil digenerate."
+            $message
         );
     }
 
